@@ -1,9 +1,4 @@
-interface Options {
-    value: number;
-    max: number;
-}
-
-export function roundRatingBy({value, max}: Options): number {
+export function roundRatingBy({value, max}: {value: number; max: number}): number {
     let rating: number = value;
 
     rating = Math.ceil(rating);

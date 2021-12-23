@@ -1,45 +1,79 @@
-@import 'taiga-ui-local';
-
 :host {
     position: relative;
     display: inline-flex;
+
+    &._readonly,
+    &._disabled {
+        pointer-events: none;
+    }
+
+    &._disabled {
+        opacity: 0.5;
+    }
 }
 
 .t-rating {
-    display: inline-flex;
-    flex-direction: row-reverse;
+    &__wrapper,
+    &__interactive {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        display: inline-flex;
+        overflow: hidden;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        white-space: nowrap;
+    }
+
+    &__interactive {
+        z-index: 2;
+        opacity: 0;
+    }
 
     &__input {
+        // @note: don't use .sr-only()
+        // we need to use an element to focus
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
-        cursor: pointer;
+        z-index: -1; // fix problem in safari, firefox
         width: 100%;
+        height: 100%;
         appearance: none;
         background: transparent;
 
+        // works in chrome, safari, edge
         &::-webkit-slider-thumb {
+            display: none;
+        }
+
+        // only works in firefox
+        &::-moz-range-thumb {
             opacity: 0;
         }
     }
 
-    &__wrapper {
-        position: absolute;
-        top: 0;
-        left: 0;
-        display: inline-flex;
-        overflow: hidden;
-        white-space: nowrap;
-        pointer-events: none;
+    &__interactive:hover ~ .t-rating__wrapper {
+        visibility: hidden;
     }
 
-    &--disabled,
-    &--readonly {
-        pointer-events: none;
+    &__interactive:hover {
+        opacity: 1;
+
+        .t-rating__icon-filled {
+            opacity: 0;
+
+            &:hover,
+            &:hover ~ .t-rating__icon-filled {
+                opacity: 1;
+            }
+        }
     }
 
-    &--disabled {
-        opacity: 0.5;
+    &__icon-filled {
+        position: relative;
+        cursor: pointer;
     }
 }

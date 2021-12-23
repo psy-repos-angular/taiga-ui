@@ -3,6 +3,7 @@ import {
     ChangeDetectorRef,
     Component,
     forwardRef,
+    HostBinding,
     Inject,
     Input,
     Optional,
@@ -12,7 +13,6 @@ import {NgControl} from '@angular/forms';
 import {AbstractTuiControl, TUI_FOCUSABLE_ITEM_ACCESSOR} from '@taiga-ui/cdk';
 
 import {RatingOptions, TUI_RATING_OPTIONS} from './rating.options';
-import {roundFocusedBy} from './utils/round-focused-by';
 import {roundRatingBy} from './utils/round-rating-by';
 
 @Component({
@@ -28,12 +28,15 @@ import {roundRatingBy} from './utils/round-rating-by';
     ],
 })
 export class TuiRatingComponent extends AbstractTuiControl<number> {
-    private previousValue: number = this.getFallbackValue();
     @Input() max: number = this.options.max;
     @Input() iconNormal: string = this.options.iconNormal;
     @Input() iconFilled: string = this.options.iconFilled;
-    focused: boolean = false;
-    focusedValue: number = 0;
+    focused: boolean = true;
+
+    @HostBinding('class._disabled')
+    get computedDisabled(): boolean {
+        return this.disabled;
+    }
 
     constructor(
         @Optional()
@@ -48,53 +51,21 @@ export class TuiRatingComponent extends AbstractTuiControl<number> {
         super(ngControl, changeDetectorRef);
     }
 
-    writeValue(value: number): void {
-        const computed = this.getComputedRatingValue(value);
+    get isFocusable(): boolean {
+        return !(this.readOnly || this.disabled);
+    }
 
-        /**
-         * @note: force update view model, when set invalid value
-         * ~ 7.5 (double), -1 (negative), 100 (greater than max)
-         */
+    setRateByIndex(index: number): void {
+        const computed = this.getComputedRatingValue(this.max - index);
+        const toggled = this.value === computed ? 0 : computed;
+
+        this.updateValue(toggled);
+    }
+
+    setRate(rate: number): void {
+        const computed = this.getComputedRatingValue(rate);
+
         this.updateValue(computed);
-    }
-
-    setValue(value: number): void {
-        const computed = this.getComputedRatingValue(value);
-
-        this.updateValue(computed);
-    }
-
-    toggleValueByFocus(): void {
-        const newValue = this.previousValue === this.focusedValue ? 0 : this.focusedValue;
-
-        this.setValue(newValue);
-        this.setPreviousValue();
-
-        if (this.value === 0) {
-            this.unsetValue();
-        }
-    }
-
-    resetFocusedValue(): void {
-        this.focusedValue = 0;
-    }
-
-    updateFocusedValue(offsetX: number, widthPx: number): void {
-        this.focusedValue = roundFocusedBy({max: this.max, offsetX, widthPx});
-        this.setPreviousValue();
-    }
-
-    updateValueWhenUseKeyboard(value: number): void {
-        if (this.focusedValue > 0) {
-            /**
-             * @note: prevent call twice (ngModelChange) when trigger (click) event
-             * if we use the keyboard, then we don't use mouseover
-             * and can use (ngModelChange) safely
-             */
-            return;
-        }
-
-        this.setValue(value);
     }
 
     protected getFallbackValue(): number {
@@ -103,16 +74,5 @@ export class TuiRatingComponent extends AbstractTuiControl<number> {
 
     private getComputedRatingValue(value: number): number {
         return roundRatingBy({value, max: this.max});
-    }
-
-    private unsetValue(): void {
-        this.setValue(0);
-        this.focusedValue = 0;
-        this.previousValue = 0;
-        this.changeDetectorRef.detectChanges();
-    }
-
-    private setPreviousValue(): void {
-        this.previousValue = this.value;
     }
 }
