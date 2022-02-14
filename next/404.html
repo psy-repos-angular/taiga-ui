@@ -2,7 +2,7 @@
 <html>
     <head><script>
 if (!localStorage.getItem('env') && location.pathname.includes('next')) {
-    localStorage.setItem('env', location.pathname + location.search)
+    localStorage.setItem('env', location.pathname + location.search + location.hash);
     location.replace('/next');
 } else {
     localStorage.removeItem('env');
@@ -75,8 +75,8 @@ if (!localStorage.getItem('env') && location.pathname.includes('next')) {
         />
         <meta name="msapplication-TileColor" content="#00aba9" />
         <title>Taiga UI</title>
-    <link rel="stylesheet" href="/next/styles.7ab0ed625c177cd07fdb.css"></head>
+    <link rel="stylesheet" href="/next/styles.5bac4acfb8cc9941671a.css"></head>
     <body>
         <app></app>
-    <script src="/next/runtime-es2015.a0fa4de2b3965485cab5.js" type="module"></script><script src="/next/runtime-es5.a0fa4de2b3965485cab5.js" nomodule defer></script><script src="/next/polyfills-es5.3c88f4ef9def1ef2aeb8.js" nomodule defer></script><script src="/next/polyfills-es2015.07a30c90f417767b080f.js" type="module"></script><script src="/next/scripts.11ba988fc16205081ece.js" defer></script><script src="/next/main-es2015.5c93000d9d3c594f3542.js" type="module"></script><script src="/next/main-es5.5c93000d9d3c594f3542.js" nomodule defer></script></body>
+    <script src="/next/runtime.482190cebb63e26d34d4.js" defer></script><script src="/next/polyfills.3445dfe95320865da9e6.js" defer></script><script src="/next/scripts.1e94ed25bf6679d0b5c7.js" defer></script><script src="/next/main.aaf01e76cd31de09c8ed.js" defer></script></body>
 </html>
