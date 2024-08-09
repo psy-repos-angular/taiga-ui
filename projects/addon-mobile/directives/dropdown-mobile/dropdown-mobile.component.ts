@@ -6,12 +6,12 @@ import {
     inject,
     ViewEncapsulation,
 } from '@angular/core';
-import {IntersectionObserverModule} from '@ng-web-apis/intersection-observer';
+import {WaIntersectionObserver} from '@ng-web-apis/intersection-observer';
 import {TuiKeyboardService} from '@taiga-ui/addon-mobile/services';
 import {TuiActiveZone} from '@taiga-ui/cdk/directives/active-zone';
 import type {TuiSwipeEvent} from '@taiga-ui/cdk/directives/swipe';
 import {TuiSwipe} from '@taiga-ui/cdk/directives/swipe';
-import {tuiInjectElement, tuiIsElement, tuiIsNodeIn} from '@taiga-ui/cdk/utils/dom';
+import {tuiInjectElement, tuiIsElement} from '@taiga-ui/cdk/utils/dom';
 import {tuiGetNativeFocused} from '@taiga-ui/cdk/utils/focus';
 import {tuiPx} from '@taiga-ui/cdk/utils/miscellaneous';
 import {tuiFadeIn, tuiSlideInTop} from '@taiga-ui/core/animations';
@@ -28,7 +28,7 @@ const GAP = 16;
     standalone: true,
     selector: 'tui-dropdown-mobile',
     imports: [
-        IntersectionObserverModule,
+        WaIntersectionObserver,
         TuiSwipe,
         NgIf,
         PolymorpheusOutlet,
@@ -92,12 +92,10 @@ export class TuiDropdownMobileComponent implements OnDestroy, AfterViewInit {
 
     protected onClick(event: MouseEvent): void {
         if (
-            !this.el.contains(event.target as Node) &&
-            // TODO: find a better way to check if the click is inside interactive element in textfield
-            !(
-                tuiIsNodeIn(event.target as Node, 'tui-svg') ||
-                (tuiIsElement(event.target) && event.target.tagName === 'button')
-            )
+            tuiIsElement(event.target) &&
+            !this.el.contains(event.target) &&
+            (!this.dropdown.el.contains(event.target) ||
+                event.target.matches('input,textarea'))
         ) {
             event.stopPropagation();
         }
@@ -136,15 +134,13 @@ export class TuiDropdownMobileComponent implements OnDestroy, AfterViewInit {
         this.doc.documentElement.scrollTop = 0;
 
         const rect = this.dropdown.el.getBoundingClientRect();
+        const top = offsetTop + GAP - rect.top;
         const offset = rect.height + GAP * 2;
 
         this.el.style.setProperty('top', tuiPx(offsetTop + offset));
         this.el.style.setProperty('height', tuiPx(height - offset));
         this.doc.body.classList.add('t-dropdown-mobile');
-        this.doc.body.style.setProperty(
-            '--t-root-top',
-            tuiPx(offsetTop + GAP - rect.top),
-        );
+        this.doc.body.style.setProperty('--t-root-top', tuiPx(top));
     }
 
     private get focused(): boolean {

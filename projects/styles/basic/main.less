@@ -55,7 +55,7 @@ svg use {
 }
 
 ::selection {
-    background-color: var(--tui-service-selected-text);
+    background-color: var(--tui-service-selection-background);
 }
 
 ::-ms-clear {
@@ -74,7 +74,7 @@ svg use {
       * the ::after blocks aren't removed
       * after the destruction of the parent class
      */
-    :after {
+    ::after {
         content: none;
     }
 }

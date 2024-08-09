@@ -1,5 +1,5 @@
 import {TestBed} from '@angular/core/testing';
-import {WINDOW} from '@ng-web-apis/common';
+import {WA_WINDOW} from '@ng-web-apis/common';
 import {take} from 'rxjs';
 
 import {TuiDarkThemeService} from '../dark-theme.service';
@@ -12,7 +12,7 @@ describe('TuiDarkThemeService', () => {
         TestBed.configureTestingModule({
             providers: [
                 {
-                    provide: WINDOW,
+                    provide: WA_WINDOW,
                     useValue: {
                         matchMedia(): unknown {
                             return mock;
@@ -29,7 +29,7 @@ describe('TuiDarkThemeService', () => {
     it('returns actual value', () => {
         let value = false;
 
-        service.pipe(take(1)).subscribe(v => {
+        service.pipe(take(1)).subscribe((v) => {
             value = v;
         });
 
@@ -39,7 +39,7 @@ describe('TuiDarkThemeService', () => {
     it('fires upon refresh', () => {
         let value = false;
 
-        service.pipe(take(2)).subscribe(v => {
+        service.pipe(take(2)).subscribe((v) => {
             value = v;
         });
 

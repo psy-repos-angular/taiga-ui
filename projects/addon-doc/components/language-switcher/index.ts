@@ -3,9 +3,8 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {TuiDataList} from '@taiga-ui/core/components/data-list';
 import {TuiFlagPipe} from '@taiga-ui/core/pipes/flag';
-import type {TuiCountryIsoCode} from '@taiga-ui/i18n/enums';
-import type {TuiLanguageName} from '@taiga-ui/i18n/interfaces';
-import {TuiLanguageSwitcherService} from '@taiga-ui/i18n/switch';
+import type {TuiCountryIsoCode, TuiLanguageName} from '@taiga-ui/i18n/types';
+import {TuiLanguageSwitcherService} from '@taiga-ui/i18n/utils';
 import {TuiSelectModule} from '@taiga-ui/legacy/components/select';
 
 @Component({
@@ -34,6 +33,7 @@ export class TuiDocLanguageSwitcher {
         ['english', 'GB'],
         ['french', 'FR'],
         ['german', 'DE'],
+        ['hebrew', 'IL'],
         ['italian', 'IT'],
         ['kazakh', 'KZ'],
         ['malay', 'MY'],

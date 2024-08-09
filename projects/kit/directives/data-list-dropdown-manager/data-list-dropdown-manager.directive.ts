@@ -37,25 +37,26 @@ export class TuiDataListDropdownManager implements AfterViewInit {
     private readonly destroyRef = inject(DestroyRef);
 
     public ngAfterViewInit(): void {
-        this.right$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(index => {
+        this.right$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((index) => {
             this.tryToFocus(index);
         });
 
         merge(this.immediate$, this.debounce$)
             .pipe(
-                switchMap(active => {
+                switchMap((active) => {
                     this.dropdowns.forEach((dropdown, index) => {
                         dropdown.toggle(index === active);
                     });
 
                     const element = this.els.get(active);
                     const dropdown = this.dropdowns.get(active);
+                    const ref = dropdown?.ref();
 
-                    if (!element || !dropdown?.dropdownBoxRef) {
+                    if (!element || !dropdown || !ref) {
                         return EMPTY;
                     }
 
-                    const {nativeElement} = dropdown.dropdownBoxRef.location;
+                    const {nativeElement} = ref.location;
                     const mouseEnter$ = tuiTypedFromEvent(
                         nativeElement,
                         'mouseenter',
@@ -66,8 +67,8 @@ export class TuiDataListDropdownManager implements AfterViewInit {
                     ).pipe(filter(({key}) => key === 'Escape'));
 
                     return merge(mouseEnter$, esc$).pipe(
-                        tap(event => {
-                            if (dropdown.dropdownBoxRef) {
+                        tap((event) => {
+                            if (dropdown.ref()) {
                                 event.stopPropagation();
                             }
 
@@ -84,7 +85,7 @@ export class TuiDataListDropdownManager implements AfterViewInit {
     @tuiPure
     private get elements$(): Observable<readonly HTMLElement[]> {
         return tuiQueryListChanges(this.els).pipe(
-            map(array => array.map(({nativeElement}) => nativeElement)),
+            map((array) => array.map(({nativeElement}) => nativeElement)),
             shareReplay({bufferSize: 1, refCount: true}),
         );
     }
@@ -92,7 +93,7 @@ export class TuiDataListDropdownManager implements AfterViewInit {
     @tuiPure
     private get right$(): Observable<number> {
         return this.elements$.pipe(
-            switchMap(elements =>
+            switchMap((elements) =>
                 merge(
                     ...elements.map((element, index) =>
                         tuiTypedFromEvent(element, 'keydown').pipe(
@@ -109,7 +110,7 @@ export class TuiDataListDropdownManager implements AfterViewInit {
     @tuiPure
     private get immediate$(): Observable<number> {
         return this.elements$.pipe(
-            switchMap(elements =>
+            switchMap((elements) =>
                 merge(
                     ...elements.map((element, index) =>
                         tuiTypedFromEvent(element, 'click').pipe(map(() => index)),
@@ -122,7 +123,7 @@ export class TuiDataListDropdownManager implements AfterViewInit {
     @tuiPure
     private get debounce$(): Observable<number> {
         return this.elements$.pipe(
-            switchMap(elements =>
+            switchMap((elements) =>
                 merge(
                     ...elements.map((element, index) =>
                         merge(
@@ -144,11 +145,12 @@ export class TuiDataListDropdownManager implements AfterViewInit {
     private notInDropdown(element: EventTarget | null, index: number): boolean {
         return !this.dropdowns
             .get(index)
-            ?.dropdownBoxRef?.location.nativeElement.contains(element);
+            ?.ref()
+            ?.location.nativeElement.contains(element);
     }
 
     private tryToFocus(index: number): void {
-        const content = this.dropdowns.get(index)?.dropdownBoxRef?.location.nativeElement;
+        const content = this.dropdowns.get(index)?.ref()?.location.nativeElement;
 
         if (!content) {
             return;

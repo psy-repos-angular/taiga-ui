@@ -1,10 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    HostBinding,
-    HostListener,
-    inject,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {EMPTY_CLIENT_RECT} from '@taiga-ui/cdk/constants';
 import {TuiHoveredService} from '@taiga-ui/cdk/directives/hovered';
@@ -20,16 +14,16 @@ import {
 } from '@taiga-ui/core/classes';
 import {TuiPositionService, TuiVisualViewportService} from '@taiga-ui/core/services';
 import {TUI_ANIMATIONS_SPEED, TUI_VIEWPORT} from '@taiga-ui/core/tokens';
-import type {TuiPortalItem} from '@taiga-ui/core/types';
 import {tuiIsObscured, tuiToAnimationOptions} from '@taiga-ui/core/utils';
 import type {PolymorpheusContent} from '@taiga-ui/polymorpheus';
 import {POLYMORPHEUS_CONTEXT, PolymorpheusOutlet} from '@taiga-ui/polymorpheus';
-import {map} from 'rxjs';
+import {map, takeWhile} from 'rxjs';
 
 import {TuiHintDirective} from './hint.directive';
 import {TuiHintHover} from './hint-hover.directive';
 import {TuiHintPointer} from './hint-pointer.directive';
 import {TuiHintPosition} from './hint-position.directive';
+import {TuiHintUnstyledComponent} from './hint-unstyled.component';
 
 const GAP = 4;
 
@@ -45,9 +39,9 @@ export const TUI_HINT_PROVIDERS = [
     selector: 'tui-hint',
     imports: [PolymorpheusOutlet],
     template: `
-        <ng-content></ng-content>
+        <ng-content />
         <span
-            *polymorpheusOutlet="content as text; context: context"
+            *polymorpheusOutlet="content as text; context: hint.context"
             [innerHTML]="text"
         ></span>
     `,
@@ -58,73 +52,74 @@ export const TUI_HINT_PROVIDERS = [
     host: {
         '[@tuiFadeIn]': 'options',
         '[class._untouchable]': 'pointer',
+        '[attr.data-appearance]': 'appearance',
+        '[attr.tuiTheme]': 'appearance',
     },
 })
 export class TuiHintComponent<C = any> {
-    private readonly polymorpheus =
-        inject<TuiContext<TuiPortalItem<C>>>(POLYMORPHEUS_CONTEXT);
-
     private readonly el = tuiInjectElement();
     private readonly hover = inject(TuiHintHover);
     private readonly vvs = inject(TuiVisualViewportService);
     private readonly viewport = inject(TUI_VIEWPORT);
 
-    @HostBinding('attr.data-appearance')
-    @HostBinding('attr.tuiTheme')
-    protected readonly appearance =
-        this.polymorpheus.$implicit.appearance ||
-        inject(TuiHintDirective).el.closest('[tuiTheme]')?.getAttribute('tuiTheme');
-
     protected readonly options = tuiToAnimationOptions(inject(TUI_ANIMATIONS_SPEED));
     protected readonly pointer = inject(TuiHintPointer, {optional: true});
     protected readonly accessor = inject(TuiRectAccessor);
 
+    protected readonly hint =
+        inject<TuiContext<TuiHintDirective<C>>>(POLYMORPHEUS_CONTEXT).$implicit;
+
+    protected readonly appearance =
+        this.hint.appearance ||
+        this.hint.el.closest('[tuiTheme]')?.getAttribute('tuiTheme');
+
     constructor() {
         inject(TuiPositionService)
             .pipe(
-                map(point => this.vvs.correct(point)),
+                takeWhile(() => this.hint.el.isConnected),
+                map((point) => this.vvs.correct(point)),
                 takeUntilDestroyed(),
             )
-            .subscribe(([top, left]) => {
-                this.update(top, left);
+            .subscribe({
+                next: ([top, left]) => this.update(top, left),
+                complete: () => this.hover.toggle(false),
             });
 
         inject(TuiHoveredService)
             .pipe(takeUntilDestroyed())
-            .subscribe(hover => this.hover.toggle(hover));
+            .subscribe((hover) => this.hover.toggle(hover));
     }
 
     protected get content(): PolymorpheusContent<C> {
-        return this.polymorpheus.$implicit.content;
-    }
-
-    protected get context(): C | undefined {
-        return this.polymorpheus.$implicit.context;
+        return this.hint.component.component === TuiHintUnstyledComponent
+            ? ''
+            : this.hint.content;
     }
 
     @HostListener('document:click', ['$event.target'])
     protected onClick(target: HTMLElement): void {
         if (
-            (!target.closest('tui-hint') && !this.hover.el.contains(target)) ||
-            tuiIsObscured(this.hover.el)
+            (!target.closest('tui-hint') && !this.hint.el.contains(target)) ||
+            tuiIsObscured(this.hint.el)
         ) {
             this.hover.toggle(false);
         }
     }
 
     @tuiPure
+    private apply(top: string, left: string, beakTop: string, beakLeft: string): void {
+        this.el.style.top = top;
+        this.el.style.left = left;
+        this.el.style.setProperty('--top', beakTop);
+        this.el.style.setProperty('--left', beakLeft);
+    }
+
     private update(top: number, left: number): void {
-        if (!this.hover.el.isConnected) {
-            this.hover.toggle(false);
-
-            return;
-        }
-
         const {height, width} = this.el.getBoundingClientRect();
         const rect = this.accessor.getClientRect();
         const viewport = this.viewport.getClientRect();
 
-        if (rect === EMPTY_CLIENT_RECT) {
+        if (rect === EMPTY_CLIENT_RECT || !height || !width) {
             return;
         }
 
@@ -134,9 +129,11 @@ export class TuiHintComponent<C = any> {
             rect.left + rect.width / 2 - safeLeft,
         ]);
 
-        this.el.style.top = tuiPx(top);
-        this.el.style.left = tuiPx(safeLeft);
-        this.el.style.setProperty('--top', tuiPx(tuiClamp(beakTop, 0.5, height - 1)));
-        this.el.style.setProperty('--left', tuiPx(tuiClamp(beakLeft, 0.5, width - 1)));
+        this.apply(
+            tuiPx(Math.round(top)),
+            tuiPx(Math.round(safeLeft)),
+            tuiPx(Math.round(tuiClamp(beakTop, 1, height - 1))),
+            tuiPx(Math.round(tuiClamp(beakLeft, 1, width - 1))),
+        );
     }
 }

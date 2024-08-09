@@ -1,35 +1,39 @@
-import type {Provider} from '@angular/core';
-import {Directive, inject, Input} from '@angular/core';
-import {AbstractTuiController} from '@taiga-ui/cdk/classes';
-import {
-    tuiCreateToken,
-    tuiProvide,
-    tuiProvideOptions,
-} from '@taiga-ui/cdk/utils/miscellaneous';
-import type {TuiAppearanceOptions} from '@taiga-ui/core/directives/appearance';
+import type {Provider, WritableSignal} from '@angular/core';
+import {Directive, inject, Input, Optional, signal, SkipSelf} from '@angular/core';
+import {tuiCreateToken, tuiProvide} from '@taiga-ui/cdk/utils/miscellaneous';
 import type {TuiSizeL, TuiSizeS} from '@taiga-ui/core/types';
 
-export interface TuiTextfieldOptions extends TuiAppearanceOptions {
-    readonly size: TuiSizeL | TuiSizeS;
-    readonly cleaner: boolean;
-}
-
-export const TUI_TEXTFIELD_DEFAULT_OPTIONS: TuiTextfieldOptions = {
+const DEFAULT = {
     appearance: 'textfield',
     size: 'l',
     cleaner: true,
-};
+} as const;
 
-export const TUI_TEXTFIELD_OPTIONS = tuiCreateToken(TUI_TEXTFIELD_DEFAULT_OPTIONS);
+export interface TuiTextfieldOptions {
+    readonly appearance: WritableSignal<string>;
+    readonly size: WritableSignal<TuiSizeL | TuiSizeS>;
+    readonly cleaner: WritableSignal<boolean>;
+}
+
+export const TUI_TEXTFIELD_OPTIONS = tuiCreateToken<TuiTextfieldOptions>({
+    appearance: signal(DEFAULT.appearance),
+    size: signal(DEFAULT.size),
+    cleaner: signal(DEFAULT.cleaner),
+});
 
 export function tuiTextfieldOptionsProvider(
     options: Partial<TuiTextfieldOptions>,
 ): Provider {
-    return tuiProvideOptions(
-        TUI_TEXTFIELD_OPTIONS,
-        options,
-        TUI_TEXTFIELD_DEFAULT_OPTIONS,
-    );
+    return {
+        provide: TUI_TEXTFIELD_OPTIONS,
+        deps: [[new Optional(), new SkipSelf(), TUI_TEXTFIELD_OPTIONS]],
+        useFactory: (parent: TuiTextfieldOptions | null) => ({
+            appearance: signal(parent?.appearance() ?? DEFAULT.appearance),
+            size: signal(parent?.size() ?? DEFAULT.size),
+            cleaner: signal(parent?.cleaner() ?? DEFAULT.cleaner),
+            ...options,
+        }),
+    };
 }
 
 @Directive({
@@ -37,18 +41,26 @@ export function tuiTextfieldOptionsProvider(
     selector: '[tuiTextfieldAppearance],[tuiTextfieldSize],[tuiTextfieldCleaner]',
     providers: [tuiProvide(TUI_TEXTFIELD_OPTIONS, TuiTextfieldOptionsDirective)],
 })
-export class TuiTextfieldOptionsDirective
-    extends AbstractTuiController
-    implements TuiTextfieldOptions
-{
+export class TuiTextfieldOptionsDirective implements TuiTextfieldOptions {
     private readonly options = inject(TUI_TEXTFIELD_OPTIONS, {skipSelf: true});
 
-    @Input('tuiTextfieldAppearance')
-    public appearance = this.options.appearance;
+    // TODO: refactor to signal inputs after Angular update
+    public appearance = signal(this.options.appearance());
+    public size = signal(this.options.size());
+    public cleaner = signal(this.options.cleaner());
 
-    @Input('tuiTextfieldSize')
-    public size = this.options.size;
+    @Input()
+    public set tuiTextfieldAppearance(appearance: string) {
+        this.appearance.set(appearance);
+    }
 
-    @Input('tuiTextfieldCleaner')
-    public cleaner = this.options.cleaner;
+    @Input()
+    public set tuiTextfieldSize(size: TuiSizeL | TuiSizeS) {
+        this.size.set(size);
+    }
+
+    @Input()
+    public set tuiTextfieldCleaner(enabled: boolean) {
+        this.cleaner.set(enabled);
+    }
 }

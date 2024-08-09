@@ -1,6 +1,6 @@
 import {Directive, inject, Input} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {WINDOW} from '@ng-web-apis/common';
+import {WA_WINDOW} from '@ng-web-apis/common';
 import {tuiInjectElement} from '@taiga-ui/cdk/utils/dom';
 import {tuiClamp} from '@taiga-ui/cdk/utils/math';
 import {map} from 'rxjs';
@@ -16,13 +16,13 @@ const OFFSET = 10;
 export class TuiSheetTopDirective {
     private readonly scroll$ = inject(TUI_SHEET_SCROLL);
     private readonly component = inject(TUI_SHEET);
-    private readonly win = inject(WINDOW);
+    private readonly win = inject(WA_WINDOW);
     private readonly el = tuiInjectElement();
 
     protected readonly rounded$ = this.scroll$
-        .pipe(map(y => y < this.stop + OFFSET))
+        .pipe(map((y) => y < this.stop + OFFSET))
         .pipe(takeUntilDestroyed())
-        .subscribe(add =>
+        .subscribe((add) =>
             add
                 ? this.el.classList.add('_rounded')
                 : this.el.classList.remove('_rounded'),
@@ -30,17 +30,17 @@ export class TuiSheetTopDirective {
 
     protected readonly transform$ = this.scroll$
         .pipe(
-            map(y => `translateY(${this.getY(y)}%) scaleX(-1)`),
+            map((y) => `translateY(${this.getY(y)}%) scaleX(-1)`),
             takeUntilDestroyed(),
         )
-        .subscribe(transform => this.el.style.setProperty('transform', transform));
+        .subscribe((transform) => this.el.style.setProperty('transform', transform));
 
     protected readonly clickthrough$ = this.scroll$
         .pipe(
-            map(y => !!Math.round(this.getY(y))),
+            map((y) => !!Math.round(this.getY(y))),
             takeUntilDestroyed(),
         )
-        .subscribe(add =>
+        .subscribe((add) =>
             add
                 ? this.el.classList.add('_clickthrough')
                 : this.el.classList.remove('_clickthrough'),

@@ -1,6 +1,6 @@
 <tui-doc-page
     header="MultiSelect"
-    package="KIT"
+    package="LEGACY"
     type="components"
 >
     <ng-template pageTab>
@@ -103,6 +103,13 @@
             [component]="11 | tuiComponent"
             [content]="11 | tuiExample"
         />
+
+        <tui-doc-example
+            id="nested-datalist"
+            heading="Nested datalist"
+            [component]="12 | tuiComponent"
+            [content]="12 | tuiExample: 'html,ts'"
+        />
     </ng-template>
 
     <ng-template pageTab>
@@ -134,7 +141,7 @@
                     [tuiHintContent]="hintContent"
                     [tuiHintDirection]="hintDirection"
                     [tuiTextfieldCleaner]="cleaner"
-                    [tuiTextfieldIconLeft]="iconLeft"
+                    [tuiTextfieldIconLeft]="iconStart"
                     [tuiTextfieldLabelOutside]="labelOutside"
                     [tuiTextfieldSize]="size"
                     [valueContent]="valueContent"

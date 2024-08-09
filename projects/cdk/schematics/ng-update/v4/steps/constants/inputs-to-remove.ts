@@ -6,9 +6,10 @@ export const INPUTS_TO_REMOVE: RemovableInput[] = [
     {inputName: 'showLoader', tags: ['tui-toggle']},
     {inputName: 'singleColor', tags: ['tui-toggle']},
     {inputName: 'hoverable', tags: ['tui-badge']},
+    {inputName: 'singleColor', tags: ['tui-money']},
     {
         inputName: 'iconAlign',
         tags: ['button', 'a'],
-        filterFn: el => hasElementAttribute(el, 'tuiLink'),
+        filterFn: (el) => hasElementAttribute(el, 'tuiLink'),
     },
 ];

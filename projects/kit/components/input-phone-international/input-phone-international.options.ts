@@ -1,6 +1,6 @@
 import type {Provider} from '@angular/core';
 import {tuiCreateToken, tuiProvideOptions} from '@taiga-ui/cdk/utils/miscellaneous';
-import type {TuiCountryIsoCode} from '@taiga-ui/i18n/enums';
+import type {TuiCountryIsoCode} from '@taiga-ui/i18n/types';
 import type {MetadataJson} from 'libphonenumber-js/core';
 import type {Observable} from 'rxjs';
 import {defer} from 'rxjs';
@@ -16,7 +16,7 @@ export const TUI_INPUT_PHONE_INTERNATIONAL_DEFAULT_OPTIONS: TuiInputPhoneInterna
         countries: [],
         countryIsoCode: 'RU',
         metadata: defer(async () =>
-            import('libphonenumber-js/min/metadata').then(m => m.default),
+            import('libphonenumber-js/min/metadata').then((m) => m.default),
         ),
     };
 

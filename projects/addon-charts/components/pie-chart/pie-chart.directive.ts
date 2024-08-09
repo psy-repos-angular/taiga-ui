@@ -1,6 +1,6 @@
 import {Directive, inject, Input, NgZone} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {ANIMATION_FRAME, PERFORMANCE} from '@ng-web-apis/common';
+import {WA_ANIMATION_FRAME, WA_PERFORMANCE} from '@ng-web-apis/common';
 import {tuiDescribeSector} from '@taiga-ui/addon-charts/utils';
 import {tuiZonefree} from '@taiga-ui/cdk/observables';
 import {tuiInjectElement} from '@taiga-ui/cdk/utils/dom';
@@ -19,8 +19,8 @@ export class TuiPieChartDirective {
 
     constructor() {
         const el = tuiInjectElement<SVGPathElement>();
-        const performance = inject(PERFORMANCE);
-        const animationFrame$ = inject(ANIMATION_FRAME);
+        const performance = inject(WA_PERFORMANCE);
+        const animationFrame$ = inject(WA_ANIMATION_FRAME);
         const speed = inject(TUI_ANIMATIONS_SPEED);
 
         this.sector$
@@ -32,13 +32,13 @@ export class TuiPieChartDirective {
                     const endDelta = cur[1] - prev[1];
 
                     return animationFrame$.pipe(
-                        map(timestamp =>
+                        map((timestamp) =>
                             tuiEaseInOutQuad(
                                 tuiClamp((timestamp - now) / tuiGetDuration(speed), 0, 1),
                             ),
                         ),
-                        takeWhile(progress => progress < 1, true),
-                        map(progress => [
+                        takeWhile((progress) => progress < 1, true),
+                        map((progress) => [
                             prev[0] + startDelta * progress,
                             cur[1] > 359 ? cur[1] : prev[1] + endDelta * progress,
                         ]),

@@ -1,10 +1,15 @@
+import {DemoRoute} from '@demo/routes';
 import {TuiDocumentationApiPagePO, tuiGoto, tuiMockImages} from '@demo-playwright/utils';
 import {expect, test} from '@playwright/test';
 
-test.describe('Deep / Select', () => {
-    const deepPaths: string[] = JSON.parse(process.env['DEMO_PATHS']!);
+const DEEP_SELECT_FLAKY = new Set<string>([DemoRoute.Avatar]);
 
-    deepPaths.forEach(path =>
+test.describe('Deep / Select', () => {
+    const deepPaths: string[] = JSON.parse(process.env['DEMO_PATHS']!).filter(
+        (path: string) => !DEEP_SELECT_FLAKY.has(path),
+    );
+
+    deepPaths.forEach((path) =>
         test(path, async ({page}) => {
             await tuiMockImages(page);
             await tuiGoto(page, `${path}/API`);

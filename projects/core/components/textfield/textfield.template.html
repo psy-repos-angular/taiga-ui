@@ -1,4 +1,3 @@
-<ng-container *ngIf="change$ | async" />
 <ng-content select="input" />
 <ng-content select="select" />
 <ng-content select="label" />
@@ -8,20 +7,20 @@
 >
     <ng-content />
     <button
-        *ngIf="options.cleaner"
+        *ngIf="options.cleaner()"
         appearance="icon"
         size="xs"
         tabindex="-1"
         tuiIconButton
         class="t-clear"
-        [iconLeft]="icons.close"
+        [iconStart]="icons.close"
         (click)="directive?.setValue('')"
-        (pointerdown.silent.prevent)="input.focus()"
+        (pointerdown.silent.prevent)="el?.nativeElement?.focus()"
     ></button>
     <ng-content select="tui-icon" />
 </span>
 <span class="t-template">
-    <ng-container *polymorpheusOutlet="content as text; context: {$implicit: control?.value, active: focused}">
+    <ng-container *polymorpheusOutlet="content as text; context: {$implicit: control?.value}">
         {{ text }}
     </ng-container>
 </span>

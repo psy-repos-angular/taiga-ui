@@ -50,7 +50,6 @@ export class TuiStepperComponent {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly el = tuiInjectElement();
     private readonly scrollService = inject(TuiScrollService);
-    private readonly resize$ = inject(ResizeObserverService);
     private readonly speed = inject(TUI_ANIMATIONS_SPEED);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -64,7 +63,7 @@ export class TuiStepperComponent {
     public readonly activeItemIndexChange = new EventEmitter<number>();
 
     constructor() {
-        this.resize$
+        inject(ResizeObserverService)
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.scrollIntoView(this.activeItemIndex));
     }
@@ -131,7 +130,7 @@ export class TuiStepperComponent {
         }
 
         const stepElements = this.steps.toArray().map(({nativeElement}) => nativeElement);
-        const index = stepElements.findIndex(element => element === current);
+        const index = stepElements.findIndex((element) => element === current);
 
         tuiMoveFocus(index, stepElements, step);
     }

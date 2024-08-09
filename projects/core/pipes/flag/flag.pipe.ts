@@ -1,7 +1,7 @@
 import type {PipeTransform} from '@angular/core';
 import {inject, Pipe} from '@angular/core';
 import {TUI_ASSETS_PATH} from '@taiga-ui/core/tokens';
-import type {TuiCountryIsoCode} from '@taiga-ui/i18n/enums';
+import type {TuiCountryIsoCode} from '@taiga-ui/i18n/types';
 
 @Pipe({
     standalone: true,
@@ -20,6 +20,6 @@ export class TuiFlagPipe implements PipeTransform {
             return null;
         }
 
-        return `${this.staticPath}/flags/${countryIsoCode}.svg`;
+        return `${this.staticPath}/flags/${countryIsoCode.toLowerCase()}.svg`;
     }
 }

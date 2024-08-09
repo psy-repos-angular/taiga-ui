@@ -4,11 +4,20 @@ import type {Attribute, ElementLocation} from 'parse5/dist/common/token';
 import type {Element} from 'parse5/dist/tree-adapters/default';
 
 import {findElementsByTagName} from '../../../../utils/templates/elements';
+import {findAttr} from '../../../../utils/templates/inputs';
 import {
     getTemplateFromTemplateResource,
     getTemplateOffset,
 } from '../../../../utils/templates/template-resource';
 import type {TemplateResource} from '../../../interfaces';
+import {replaceSizeAttr} from './toggles/common';
+
+const badgeSizeMap = {
+    xs: 's',
+    s: 'm',
+    m: 'l',
+    l: 'xl',
+};
 
 export function migrateBadge({
     resource,
@@ -29,9 +38,15 @@ export function migrateBadge({
             return;
         }
 
-        const valueAttr = attrs.find(
-            attr => attr.name === '[value]' || attr.name === 'value',
+        replaceSizeAttr(
+            attrs,
+            sourceCodeLocation,
+            recorder,
+            templateOffset,
+            badgeSizeMap,
         );
+
+        const valueAttr = findAttr(attrs, 'value');
 
         // migration for icon-only badges
         if (!valueAttr) {
@@ -40,7 +55,9 @@ export function migrateBadge({
             return;
         }
 
-        const svg = (childNodes as Element[])?.find(node => node.nodeName === 'tui-svg');
+        const svg = (childNodes as Element[])?.find(
+            (node) => node.nodeName === 'tui-svg',
+        );
 
         if (svg) {
             migrateIcon({svg, sourceCodeLocation, recorder, templateOffset});
@@ -66,7 +83,7 @@ function migrateIcon({
     recorder: UpdateRecorder;
     templateOffset: number;
 }): void {
-    const src = svg.attrs?.find(attr => attr.name === 'src');
+    const src = findAttr(svg.attrs, 'src');
     const srcValue = src?.value;
 
     if (!srcValue) {
@@ -77,7 +94,7 @@ function migrateIcon({
 
     recorder.insertRight(
         insertTo,
-        `${src?.name === 'src' ? 'iconLeft' : '[iconLeft]'}="${srcValue}"`,
+        `${src?.name === 'src' ? 'iconStart' : '[iconStart]'}="${srcValue}"`,
     );
     recorder.remove(
         svg.sourceCodeLocation?.startOffset || 0,

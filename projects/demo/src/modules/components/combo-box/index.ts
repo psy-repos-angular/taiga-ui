@@ -95,7 +95,7 @@ export default class Example extends AbstractExampleTuiControl {
 
     protected readonly stringifyVariants: Array<TuiStringHandler<Account | string>> = [
         String,
-        item => String(String(item).match(/\d+/)),
+        (item) => String(String(item).match(/\d+/)),
     ];
 
     protected stringify = this.stringifyVariants[0];
@@ -122,7 +122,7 @@ export default class Example extends AbstractExampleTuiControl {
 
     public readonly iconVariants = ['', '@tui.pie-chart', '@tui.credit-card'];
 
-    public override iconLeft = this.iconVariants[0];
+    public override iconStart = this.iconVariants[0];
 
     protected get valueContent(): PolymorpheusContent<TuiValueContentContext<Account>> {
         return this.valueTemplateRef && this.selectedValueTemplate
@@ -132,7 +132,7 @@ export default class Example extends AbstractExampleTuiControl {
 
     @tuiPure
     protected filter(query: string | null): readonly Account[] {
-        return this.items.filter(item => TUI_DEFAULT_MATCHER(item, query || ''));
+        return this.items.filter((item) => TUI_DEFAULT_MATCHER(item, query || ''));
     }
 
     protected setValue(): void {

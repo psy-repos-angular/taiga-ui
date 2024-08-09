@@ -74,14 +74,14 @@ const TEMPLATE_AFTER = `
 <tui-badge
     appearance="success"
    ${''}
-iconLeft="tuiIconHelpCircle">Taiga
+iconStart="tuiIconHelpCircle">Taiga
     ${''}
 </tui-badge>
 <!-- Taiga migration TODO: use "<tui-icon>" with "tuiBadge" directive for icon-only badges instead -->
 <tui-badge
     appearance="success"
 >
-    <tui-svg src="tuiIconHelpCircle"></tui-svg>
+    <tui-icon  icon="tuiIconHelpCircle"></tui-icon>
 </tui-badge>
 `;
 

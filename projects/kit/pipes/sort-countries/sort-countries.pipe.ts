@@ -1,6 +1,6 @@
 import type {PipeTransform} from '@angular/core';
 import {inject, Pipe} from '@angular/core';
-import type {TuiCountryIsoCode} from '@taiga-ui/i18n/enums';
+import type {TuiCountryIsoCode} from '@taiga-ui/i18n/types';
 import {TUI_COUNTRIES} from '@taiga-ui/kit/tokens';
 import type {Observable} from 'rxjs';
 import {map} from 'rxjs';
@@ -16,7 +16,9 @@ export class TuiSortCountriesPipe implements PipeTransform {
         countries: readonly TuiCountryIsoCode[],
     ): Observable<TuiCountryIsoCode[]> {
         return this.countriesNames$.pipe(
-            map(names => [...countries].sort((a, b) => names[a].localeCompare(names[b]))),
+            map((names) =>
+                [...countries].sort((a, b) => names[a].localeCompare(names[b])),
+            ),
         );
     }
 }

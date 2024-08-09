@@ -79,7 +79,7 @@ export class TuiDropdownSelection
     public readonly type = 'dropdown';
 
     constructor() {
-        super(subscriber => this.stream$.subscribe(subscriber));
+        super((subscriber) => this.stream$.subscribe(subscriber));
     }
 
     @Input()
@@ -143,7 +143,7 @@ export class TuiDropdownSelection
      * Check if Node is inside dropdown
      */
     private boxContains(node: Node): boolean {
-        return !!this.dropdown.dropdownBoxRef?.location.nativeElement.contains(node);
+        return !!this.dropdown.ref()?.location.nativeElement.contains(node);
     }
 
     private veryVerySadInputFix(element: HTMLInputElement | HTMLTextAreaElement): Range {

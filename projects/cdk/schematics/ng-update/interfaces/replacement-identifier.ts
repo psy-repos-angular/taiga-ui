@@ -7,19 +7,11 @@ export interface ReplacementIdentifier {
         readonly moduleSpecifier: string;
         readonly name: string;
         readonly namedImport?: string;
+        readonly spreadInModule?: boolean;
     };
 }
 
-export interface ReplacementIdentifierMulti extends Pick<ReplacementIdentifier, 'from'> {
-    readonly to:
-        | Array<{
-              readonly moduleSpecifier: string;
-              readonly name: string;
-              readonly namedImport?: string;
-          }>
-        | {
-              readonly moduleSpecifier: string;
-              readonly name: string;
-              readonly namedImport?: string;
-          };
+export interface ReplacementIdentifierMulti {
+    readonly from: Array<ReplacementIdentifier['from']> | ReplacementIdentifier['from'];
+    readonly to: Array<ReplacementIdentifier['to']> | ReplacementIdentifier['to'];
 }

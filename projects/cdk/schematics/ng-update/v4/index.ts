@@ -16,12 +16,16 @@ import {
     replaceIdentifiers,
     showWarnings,
 } from '../steps';
+import {replaceServices} from '../steps/replace-services';
 import {getFileSystem} from '../utils/get-file-system';
 import {ENUMS_TO_REPLACE} from '../v4/steps/constants/enums';
 import {
+    migrateAlertService,
     migrateAllCountryIsoCodes,
     migrateDestroyService,
     migrateLegacyMask,
+    migrateMonthContext,
+    migrateNumberFormatSettings,
     migrateOptionProviders,
     migrateProprietary,
     migrateStyles,
@@ -34,15 +38,23 @@ import {
     IDENTIFIERS_TO_REPLACE,
     MIGRATION_WARNINGS,
     MODULES_TO_REMOVE,
+    SERVICES_TO_REPLACE,
 } from './steps/constants';
+import {MODULES_TO_REPLACE_WITH_PROVIDERS} from './steps/constants/modules-to-replace';
 import {TYPES_TO_RENAME} from './steps/constants/types';
+import {migrateRoot} from './steps/migrate-root';
+import {replaceModulesWithProviders} from './steps/utils/replace-modules-with-providers';
 
 function main(options: TuiSchema): Rule {
     return (tree: Tree, context: SchematicContext) => {
         const fileSystem = getFileSystem(tree);
 
+        replaceEnums(options, ENUMS_TO_REPLACE);
+        migrateRoot(fileSystem, options);
+        replaceServices(options, SERVICES_TO_REPLACE);
         replaceIdentifiers(options, IDENTIFIERS_TO_REPLACE);
         removeModules(options, MODULES_TO_REMOVE);
+        replaceModulesWithProviders(options, MODULES_TO_REPLACE_WITH_PROVIDERS);
         renameTypes(options, TYPES_TO_RENAME);
         restoreTuiMapper(options);
         restoreTuiMatcher(options);
@@ -50,8 +62,11 @@ function main(options: TuiSchema): Rule {
         migrateDestroyService(options);
         migrateOptionProviders(options);
         migrateAllCountryIsoCodes(options);
+        migrateAlertService(options);
+        migrateNumberFormatSettings(options);
+        migrateMonthContext(options);
 
-        replaceEnums(options, ENUMS_TO_REPLACE);
+        saveActiveProject();
         migrateTemplates(fileSystem, options);
         showWarnings(context, MIGRATION_WARNINGS);
 

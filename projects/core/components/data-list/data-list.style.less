@@ -29,6 +29,10 @@ tui-data-list {
             font: var(--tui-font-text-s);
             min-height: 2rem;
             padding: 0.3125rem 0.5rem;
+
+            &::before {
+                font-size: 1rem;
+            }
         }
     }
 
@@ -57,6 +61,44 @@ tui-data-list {
         box-sizing: border-box;
         margin: var(--tui-data-list-margin) 0;
     }
+
+    [tuiOption] {
+        .button-clear();
+        .transition(background);
+
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        margin: var(--tui-data-list-margin) 0;
+        justify-content: space-between;
+        text-align: left;
+        color: var(--tui-text-primary);
+        border-radius: var(--tui-radius-s);
+        outline: none;
+        cursor: pointer;
+        background-clip: padding-box;
+
+        &:disabled {
+            opacity: var(--tui-disabled-opacity);
+            cursor: default;
+        }
+
+        &:focus-within,
+        &._with-dropdown {
+            background-color: var(--tui-background-neutral-1);
+        }
+
+        &::before {
+            margin-inline-end: 0.5rem;
+        }
+
+        &::after {
+            font-size: 1rem;
+            margin: 0 -0.75rem 0 auto;
+            border-left: 0.5rem solid;
+            border-right: 0.5rem solid;
+        }
+    }
 }
 
 tui-opt-group {
@@ -71,23 +113,23 @@ tui-opt-group {
         font: var(--tui-font-text-s);
         line-height: 1.25rem;
 
-        &:before {
+        &::before {
             padding-left: 0.625rem;
             padding-right: 0.625rem;
         }
 
-        &:after {
+        &::after {
             left: 0.625rem;
             right: 0.625rem;
         }
     }
 
-    &:empty:before,
-    &:empty:after {
+    &:empty::before,
+    &:empty::after {
         display: none;
     }
 
-    &:before {
+    &::before {
         content: attr(data-label);
         padding: var(--tui-data-list-padding) 0.5rem var(--tui-data-list-padding);
         margin: var(--tui-data-list-margin) 0;
@@ -95,7 +137,7 @@ tui-opt-group {
         word-break: break-word;
     }
 
-    &:after {
+    &::after {
         position: absolute;
         left: 0.5rem;
         right: 0.5rem;
@@ -105,55 +147,23 @@ tui-opt-group {
     }
 
     &:not(:empty) ~ & {
-        &:before {
+        &::before {
             padding-top: calc(0.75rem + var(--tui-data-list-padding));
         }
 
-        &[data-label='']:before,
-        &:not([data-label]):before {
+        &[data-label='']::before,
+        &:not([data-label])::before {
             padding: var(--tui-data-list-padding) 0;
         }
 
-        &:after {
+        &::after {
             content: '';
         }
     }
 
-    &[data-label='']:before,
-    &:not([data-label]):before {
+    &[data-label='']::before,
+    &:not([data-label])::before {
         padding: 0;
         margin: 0;
-    }
-}
-
-[tuiOption] {
-    .button-clear();
-    .transition(background);
-
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-    margin: var(--tui-data-list-margin) 0;
-    justify-content: space-between;
-    text-align: left;
-    color: var(--tui-text-primary);
-    border-radius: var(--tui-radius-s);
-    outline: none;
-    cursor: pointer;
-    background-clip: padding-box;
-
-    &:disabled {
-        opacity: var(--tui-disabled-opacity);
-        cursor: default;
-    }
-
-    &:focus-within,
-    &._with-dropdown {
-        background-color: var(--tui-background-neutral-1);
-    }
-
-    &:after {
-        font-size: 1rem;
-        margin: 0 -0.25rem 0 1rem;
     }
 }

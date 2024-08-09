@@ -40,7 +40,7 @@ export interface TuiNumberFormatSettings {
 
 export const TUI_DEFAULT_NUMBER_FORMAT: TuiNumberFormatSettings = {
     precision: NaN,
-    decimalSeparator: ',',
+    decimalSeparator: '.',
     thousandSeparator: CHAR_NO_BREAK_SPACE,
     rounding: 'truncate',
     decimalMode: 'pad',
@@ -62,7 +62,7 @@ export function tuiNumberFormatProvider(
             parent: Observable<TuiNumberFormatSettings> | null,
         ): Observable<TuiNumberFormatSettings> =>
             (parent || of(TUI_DEFAULT_NUMBER_FORMAT)).pipe(
-                map(format => ({...format, ...options})),
+                map((format) => ({...format, ...options})),
             ),
     };
 }

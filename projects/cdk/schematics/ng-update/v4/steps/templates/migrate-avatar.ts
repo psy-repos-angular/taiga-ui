@@ -4,12 +4,24 @@ import type {Attribute} from 'parse5/dist/common/token';
 
 import {addImportToClosestModule} from '../../../../utils/add-import-to-closest-module';
 import {findElementsByTagName} from '../../../../utils/templates/elements';
+import {findAttr} from '../../../../utils/templates/inputs';
 import {
     getTemplateFromTemplateResource,
     getTemplateOffset,
 } from '../../../../utils/templates/template-resource';
 import type {TemplateResource} from '../../../interfaces';
 import {removeAttrs} from '../utils/remove-attrs';
+import {replaceSizeAttr} from './toggles/common';
+
+const sizeMap: Record<string, string> = {
+    xxs: 'xs',
+    xs: 's',
+    s: 'm',
+    m: 'l',
+    l: 'xl',
+    xl: 'xxl',
+    xxl: 'xxl',
+};
 
 function addModules(
     componentPath: string,
@@ -24,10 +36,6 @@ function getFallbackValue(
     textValue: string | undefined,
     fallbackValue: string | undefined,
 ): string {
-    if (textValue) {
-        return `(${textValue} | tuiInitials)`;
-    }
-
     return textValue ? `(${textValue} | tuiInitials)` : fallbackValue || '';
 }
 
@@ -47,21 +55,23 @@ export function migrateAvatar({
     const template = getTemplateFromTemplateResource(resource, fileSystem);
     const templateOffset = getTemplateOffset(resource);
 
-    const elements = findElementsByTagName(template, 'tui-avatar');
+    const avatarElements = findElementsByTagName(template, 'tui-avatar');
+    const markerIconElements = findElementsByTagName(template, 'tui-marker-icon');
 
-    elements.forEach(({attrs, sourceCodeLocation}) => {
-        const avatarUrlAttr = attrs.find(
-            attr => attr.name === '[avatarurl]' || attr.name === 'avatarurl',
-        );
-        const fallbackAttr = attrs.find(
-            attr => attr.name === '[fallback]' || attr.name === 'fallback',
-        );
-        const textAttr = attrs.find(
-            attr => attr.name === '[text]' || attr.name === 'text',
-        );
-        const roundedAttr = attrs.find(
-            attr => attr.name === '[rounded]' || attr.name === 'rounded',
-        );
+    [...avatarElements, ...markerIconElements].forEach(({attrs, sourceCodeLocation}) => {
+        if (!sourceCodeLocation) {
+            return;
+        }
+
+        replaceSizeAttr(attrs, sourceCodeLocation, recorder, templateOffset, sizeMap);
+    });
+
+    avatarElements.forEach(({attrs, sourceCodeLocation}) => {
+        const avatarUrlAttr = findAttr(attrs, 'avatarurl');
+        const fallbackAttr = findAttr(attrs, 'fallback');
+        const textAttr = findAttr(attrs, 'text');
+        const roundedAttr = findAttr(attrs, 'rounded');
+        const autoColorAttr = findAttr(attrs, 'autoColor');
 
         if ((!avatarUrlAttr && !textAttr) || !sourceCodeLocation) {
             return;
@@ -75,6 +85,9 @@ export function migrateAvatar({
         const fallbackAttrValue =
             fallbackAttr?.value &&
             normalizeAttrValue(fallbackAttr.name, fallbackAttr.value);
+        const autoColorValue =
+            autoColorAttr?.value &&
+            normalizeAttrValue(autoColorAttr.name, autoColorAttr.value);
 
         const insertTo =
             (sourceCodeLocation.startTag?.startOffset ?? 0) + '<tui-avatar'.length;
@@ -97,12 +110,15 @@ export function migrateAvatar({
             insertTo + templateOffset,
             ` [src]="${mainSrc}${fallbackSrc ? ` ${fallbackSrc}` : ''}"${
                 !roundedAttr ? ' [round]="false"' : ''
-            }`,
+            }${autoColorValue === 'true' ? ` [style.background]="${textAttrValue} | tuiAutoColor"` : ''}`,
         );
 
-        const attrsToRemove = [avatarUrlAttr, textAttr, fallbackAttr].filter(
-            (attr): attr is Attribute => attr !== undefined,
-        );
+        const attrsToRemove = [
+            avatarUrlAttr,
+            textAttr,
+            fallbackAttr,
+            autoColorAttr,
+        ].filter((attr): attr is Attribute => attr !== undefined);
 
         const fallbackModule = !!((avatarUrlAttr && textAttrValue) || fallbackAttr);
         const initialsModule = !!textAttrValue;

@@ -27,12 +27,12 @@ export class Test {
 }`;
 
 const COMPONENT_AFTER = `import { TuiFallbackSrcPipe, TuiInitialsPipe } from "@taiga-ui/core";
-import { TuiAvatarModule } from "@taiga-ui/kit";
+import { TuiAvatar } from "@taiga-ui/kit";
 
 @Component({
     standalone: true,
     templateUrl: './test.template.html',
-    imports: [TuiAvatarModule, TuiFallbackSrcPipe, TuiInitialsPipe]
+    imports: [TuiAvatar, TuiFallbackSrcPipe, TuiInitialsPipe]
 })
 export class Test {
 }`;
@@ -42,9 +42,12 @@ const TEMPLATE_BEFORE = `
     avatarUrl="tuiIconUser"
     text="alex inkin"
     [rounded]="true"
+    size="xxs"
+    [autoColor]="true"
 ></tui-avatar>
 <tui-avatar
     avatarUrl="tuiIconUser"
+    [size]="size"
 ></tui-avatar>
 <tui-avatar
     class="tui-avatar"
@@ -62,13 +65,16 @@ const TEMPLATE_BEFORE = `
 `;
 
 const TEMPLATE_AFTER = `
-<tui-avatar [src]="'tuiIconUser' | tuiFallbackSrc : ('alex inkin' | tuiInitials) | async"
+<tui-avatar [src]="'tuiIconUser' | tuiFallbackSrc : ('alex inkin' | tuiInitials) | async" [style.background]="'alex inkin' | tuiAutoColor"
    ${''}
    ${''}
     [round]="true"
+    size="xs"
+   ${''}
 ></tui-avatar>
 <tui-avatar [src]="'tuiIconUser'" [round]="false"
    ${''}
+    [size]="size"
 ></tui-avatar>
 <tui-avatar [src]="avatarUrl | tuiFallbackSrc : (text | tuiInitials) | async" [round]="false"
     class="tui-avatar"

@@ -1,6 +1,6 @@
 import {DOCUMENT} from '@angular/common';
 import {inject} from '@angular/core';
-import {WINDOW} from '@ng-web-apis/common';
+import {WA_WINDOW} from '@ng-web-apis/common';
 import {tuiTypedFromEvent} from '@taiga-ui/cdk/observables';
 import {
     tuiCreateTokenFromFactory,
@@ -57,7 +57,7 @@ export const TUI_ACTIVE_ELEMENT = tuiCreateTokenFromFactory<
     Observable<EventTarget | null>
 >(() => {
     const removedElement$ = inject(TUI_REMOVED_ELEMENT);
-    const win = inject(WINDOW);
+    const win = inject(WA_WINDOW);
     const doc = inject(DOCUMENT);
     const focusout$ = tuiTypedFromEvent(win, 'focusout', {capture: true});
     const focusin$ = tuiTypedFromEvent(win, 'focusin', {capture: true});
@@ -77,10 +77,10 @@ export const TUI_ACTIVE_ELEMENT = tuiCreateTokenFromFactory<
         ),
         blur$.pipe(
             map(() => doc.activeElement),
-            filter(element => !!element?.matches('iframe')),
+            filter((element) => !!element?.matches('iframe')),
         ),
         focusin$.pipe(
-            switchMap(event => {
+            switchMap((event) => {
                 const target = tuiGetActualTarget(event);
                 const root = tuiGetDocumentOrShadowRoot(target) as Document;
 
@@ -90,7 +90,7 @@ export const TUI_ACTIVE_ELEMENT = tuiCreateTokenFromFactory<
             }),
         ),
         mousedown$.pipe(
-            switchMap(event => {
+            switchMap((event) => {
                 const actualTargetInCurrentTime = tuiGetActualTarget(event);
 
                 return !doc.activeElement || doc.activeElement === doc.body

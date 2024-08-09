@@ -1,29 +1,29 @@
 /// <reference lib="es2021" />
 import type {DevkitFileSystem} from 'ng-morph';
-import {addPackageJsonDependency, removePackageJsonDependency} from 'ng-morph';
+import {
+    addPackageJsonDependency,
+    getImports,
+    getPackageJsonDependency,
+    removePackageJsonDependency,
+} from 'ng-morph';
 
 import {TUI_VERSION} from '../../../../constants/version';
-import cdkPackage from '../../../../package.json';
+import {ALL_TS_FILES} from '../../../constants';
 import type {TuiSchema} from '../../../ng-add/schema';
 import {replacePackageName} from '../../steps';
 
 export function updatePackages({tree}: DevkitFileSystem, _: TuiSchema): void {
     const packagesToRemove = ['@taiga-ui/addon-tablebars', '@taiga-ui/addon-preview'];
 
-    packagesToRemove.forEach(pkg => {
+    packagesToRemove.forEach((pkg) => {
         removePackageJsonDependency(tree, pkg);
-    });
-
-    addPackageJsonDependency(tree, {
-        name: '@taiga-ui/legacy',
-        version: TUI_VERSION,
     });
 
     replacePackageName(
         '@tinkoff/ng-polymorpheus',
         {
             name: '@taiga-ui/polymorpheus',
-            version: cdkPackage.peerDependencies['@taiga-ui/polymorpheus'],
+            version: '^4.6.4',
         },
         tree,
     );
@@ -31,7 +31,7 @@ export function updatePackages({tree}: DevkitFileSystem, _: TuiSchema): void {
         '@tinkoff/ng-event-plugins',
         {
             name: '@taiga-ui/event-plugins',
-            version: cdkPackage.peerDependencies['@taiga-ui/event-plugins'],
+            version: '^4.0.1',
         },
         tree,
     );
@@ -43,4 +43,25 @@ export function updatePackages({tree}: DevkitFileSystem, _: TuiSchema): void {
         },
         tree,
     );
+
+    if (!getPackageJsonDependency(tree, '@taiga-ui/event-plugins')) {
+        addPackageJsonDependency(tree, {
+            name: '@taiga-ui/event-plugins',
+            version: '^4.0.1',
+        });
+    }
+
+    if (getImports(ALL_TS_FILES, {moduleSpecifier: '@taiga-ui/layout'}).length) {
+        addPackageJsonDependency(tree, {
+            name: '@taiga-ui/layout',
+            version: TUI_VERSION,
+        });
+    }
+
+    if (getImports(ALL_TS_FILES, {moduleSpecifier: '@taiga-ui/legacy'}).length) {
+        addPackageJsonDependency(tree, {
+            name: '@taiga-ui/legacy',
+            version: TUI_VERSION,
+        });
+    }
 }

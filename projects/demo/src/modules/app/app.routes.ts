@@ -21,19 +21,9 @@ export const ROUTES: Routes = [
         loadComponent: async () => import('../info/browsers'),
     }),
     route({
-        path: DemoRoute.Changelog,
-        title: 'Changelog',
-        loadComponent: async () => import('../info/changelog'),
-    }),
-    route({
         path: DemoRoute.SSR,
         title: 'Server Side Rendering (SSR)',
         loadComponent: async () => import('../info/ssr'),
-    }),
-    route({
-        path: DemoRoute.AddonDoc,
-        title: 'Documentation engine',
-        loadComponent: async () => import('../info/doc'),
     }),
     route({
         path: DemoRoute.Related,
@@ -145,6 +135,11 @@ export const ROUTES: Routes = [
         title: 'Appearance',
     }),
     route({
+        path: DemoRoute.FluidTypography,
+        loadComponent: async () => import('../directives/fluid-typography'),
+        title: 'FluidTypography',
+    }),
+    route({
         path: DemoRoute.Chip,
         loadComponent: async () => import('../components/chip'),
         title: 'Chip',
@@ -187,7 +182,7 @@ export const ROUTES: Routes = [
     route({
         path: DemoRoute.Header,
         title: 'Header',
-        loadComponent: async () => import('../directives/header'),
+        loadComponent: async () => import('../components/header'),
     }),
     route({
         path: DemoRoute.Icon,
@@ -226,7 +221,7 @@ export const ROUTES: Routes = [
     }),
     route({
         path: DemoRoute.Navigation,
-        loadComponent: async () => import('../components/experimental/navigation'),
+        loadComponent: async () => import('../components/navigation'),
         title: 'Navigation',
     }),
     route({
@@ -238,11 +233,6 @@ export const ROUTES: Routes = [
         path: DemoRoute.Button,
         title: 'Button',
         loadComponent: async () => import('../components/button'),
-    }),
-    route({
-        path: DemoRoute.ButtonVertical,
-        title: 'ButtonVertical',
-        loadComponent: async () => import('../components/button-vertical'),
     }),
     route({
         path: DemoRoute.ButtonClose,
@@ -318,6 +308,11 @@ export const ROUTES: Routes = [
         path: DemoRoute.InputFiles,
         loadComponent: async () => import('../components/input-files'),
         title: 'InputFiles',
+    }),
+    route({
+        path: DemoRoute.InputColor,
+        loadComponent: async () => import('../components/input-color'),
+        title: 'InputColor',
     }),
     route({
         path: DemoRoute.Group,
@@ -578,6 +573,11 @@ export const ROUTES: Routes = [
         path: DemoRoute.Slider,
         loadComponent: async () => import('../components/slider'),
         title: 'Slider',
+    }),
+    route({
+        path: DemoRoute.Status,
+        loadComponent: async () => import('../components/status'),
+        title: 'Status',
     }),
     route({
         path: DemoRoute.Stepper,

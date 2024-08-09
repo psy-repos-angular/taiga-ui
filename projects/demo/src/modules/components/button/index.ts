@@ -18,6 +18,7 @@ export default class Page {
         'Icons',
         'Loading',
         'Options with DI',
+        'Vertical',
     ];
 
     protected readonly sizes: ReadonlyArray<TuiSizeL | TuiSizeXS> = ['xs', 's', 'm', 'l'];
@@ -40,8 +41,8 @@ export default class Page {
 
     protected readonly icons = ['', '@tui.search', '@tui.chevron-down'];
 
-    protected iconLeft = this.icons[0];
-    protected iconRight = this.icons[0];
+    protected iconStart = this.icons[0];
+    protected iconEnd = this.icons[0];
 
     protected loading = false;
 }

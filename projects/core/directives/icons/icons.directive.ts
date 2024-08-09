@@ -8,12 +8,12 @@ import {
 } from '@angular/core';
 import type {TuiStringHandler} from '@taiga-ui/cdk/types';
 import {tuiWithStyles} from '@taiga-ui/cdk/utils/miscellaneous';
-import {TUI_ICON, tuiInjectIconResolver} from '@taiga-ui/core/tokens';
+import {TUI_ICON_END, TUI_ICON_START, tuiInjectIconResolver} from '@taiga-ui/core/tokens';
 
 @Component({
     standalone: true,
     template: '',
-    styleUrls: ['./icons.styles.less'],
+    styles: ['@import "@taiga-ui/core/styles/components/icons.less";'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -24,13 +24,10 @@ class TuiIconsStyles {}
 
 @Directive({
     standalone: true,
-    selector: '[tuiIcons]:is(never)',
     host: {
         tuiIcons: '',
-        '[class._icon-left]': 'iconLeft',
-        '[class._icon-right]': 'iconRight',
-        '[style.--t-mask-left]': '"url(" + resolver(iconLeft) + ")"',
-        '[style.--t-mask-right]': '"url(" + resolver(iconRight) + ")"',
+        '[style.--t-icon-start]': 'iconStart ? "url(" + resolver(iconStart) + ")" : null',
+        '[style.--t-icon-end]': 'iconEnd ? "url(" + resolver(iconEnd) + ")" : null',
     },
 })
 export class TuiIcons {
@@ -38,8 +35,8 @@ export class TuiIcons {
     protected readonly resolver: TuiStringHandler<string> = tuiInjectIconResolver();
 
     @Input()
-    public iconLeft = inject(TUI_ICON);
+    public iconStart = inject(TUI_ICON_START, {self: true, optional: true}) || '';
 
     @Input()
-    public iconRight = '';
+    public iconEnd = inject(TUI_ICON_END, {self: true, optional: true}) || '';
 }

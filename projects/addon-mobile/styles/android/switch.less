@@ -3,11 +3,11 @@ input[tuiSwitch] {
 
     height: 1.25rem;
     width: 2.5rem;
-    color: var(--tui-border-hover);
+    color: var(--tui-border-hover) !important;
     background: transparent !important;
     overflow: visible;
 
-    &:before {
+    &::before {
         content: '';
         display: block;
         height: 100%;
@@ -22,7 +22,7 @@ input[tuiSwitch] {
         mask: none;
     }
 
-    &:after {
+    &::after {
         .transition(transform);
 
         content: '';
@@ -34,6 +34,7 @@ input[tuiSwitch] {
         border-radius: 100%;
         background: #f6f6f6;
         transform: none;
+        outline: none;
         box-shadow:
             0 0.0625rem 0.0625rem rgba(0, 0, 0, 0.24),
             0 0 0.0625rem rgba(0, 0, 0, 0.12),
@@ -41,24 +42,24 @@ input[tuiSwitch] {
     }
 
     &:checked {
-        color: var(--tui-background-accent-2);
+        color: var(--tui-background-accent-2) !important;
         background: transparent;
 
-        &:after {
+        &::after {
             background: currentColor;
             transform: translateX(1.25rem);
         }
     }
 
     &:invalid {
-        color: var(--tui-status-negative);
+        color: var(--tui-status-negative) !important;
 
         &:not(:checked) {
             background: transparent;
             opacity: 0.4;
         }
 
-        &:after {
+        &::after {
             background: var(--tui-status-negative);
         }
     }

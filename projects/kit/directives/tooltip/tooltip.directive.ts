@@ -11,11 +11,11 @@ import {
 import {toSignal} from '@angular/core/rxjs-interop';
 import {tuiWatch} from '@taiga-ui/cdk/observables';
 import {TUI_IS_MOBILE} from '@taiga-ui/cdk/tokens';
-import {tuiDirectiveBinding, tuiWithStyles} from '@taiga-ui/cdk/utils/miscellaneous';
+import {tuiWithStyles} from '@taiga-ui/cdk/utils/miscellaneous';
 import {TuiTextfieldComponent} from '@taiga-ui/core/components/textfield';
 import {
     TUI_APPEARANCE_OPTIONS,
-    TuiAppearance,
+    tuiAppearanceState,
     TuiWithAppearance,
 } from '@taiga-ui/core/directives/appearance';
 import {
@@ -24,8 +24,7 @@ import {
     TuiHintDirective,
     TuiHintHover,
 } from '@taiga-ui/core/directives/hint';
-import {TUI_ICON} from '@taiga-ui/core/tokens';
-import type {TuiInteractiveState} from '@taiga-ui/core/types';
+import {TUI_ICON_START} from '@taiga-ui/core/tokens';
 import {map} from 'rxjs';
 
 @Component({
@@ -49,7 +48,7 @@ class TuiTooltipStyles {}
             useValue: {appearance: 'icon'},
         },
         {
-            provide: TUI_ICON,
+            provide: TUI_ICON_START,
             useFactory: () => inject(TUI_HINT_OPTIONS).icon,
         },
     ],
@@ -73,7 +72,15 @@ export class TuiTooltip implements DoCheck {
     private readonly driver = inject(TuiHintHover);
 
     protected readonly nothing = tuiWithStyles(TuiTooltipStyles);
-    protected readonly state = bindAppearanceState();
+    protected readonly state: Signal<unknown> = tuiAppearanceState(
+        toSignal(
+            inject(TuiHintHover).pipe(
+                map((hover) => (hover ? 'hover' : null)),
+                tuiWatch(inject(ChangeDetectorRef)),
+            ),
+            {initialValue: null},
+        ),
+    );
 
     public ngDoCheck(): void {
         if (this.textfield?.id) {
@@ -90,18 +97,4 @@ export class TuiTooltip implements DoCheck {
 
         this.driver.toggle();
     }
-}
-
-function bindAppearanceState(): Signal<TuiInteractiveState | null> {
-    return tuiDirectiveBinding(
-        TuiAppearance,
-        'tuiAppearanceState',
-        toSignal(
-            inject(TuiHintHover).pipe(
-                map(hover => (hover ? 'hover' : null)),
-                tuiWatch(inject(ChangeDetectorRef)),
-            ),
-            {initialValue: null},
-        ),
-    );
 }

@@ -30,13 +30,13 @@ export class TuiDialogsExample1 {
                 buttons: ['Absolutely!', 'No way!'],
             })
             .pipe(
-                switchMap(response =>
+                switchMap((response) =>
                     response
                         ? this.alerts.open(wisely, {
-                              status: 'success',
+                              appearance: 'success',
                           })
                         : this.alerts.open(poorly, {
-                              status: 'error',
+                              appearance: 'error',
                           }),
                 ),
             )

@@ -17,7 +17,7 @@ import {TuiHintOptionsDirective} from '@taiga-ui/core/directives/hint';
 import type {TuiSizeL, TuiSizeS} from '@taiga-ui/core/types';
 import {AbstractTuiControl, tuiAsControl} from '@taiga-ui/legacy/classes';
 import {
-    TUI_ICON_PADDINGS,
+    TUI_ICON_START_PADDINGS,
     TuiTextfieldComponent,
 } from '@taiga-ui/legacy/components/primitive-textfield';
 import {
@@ -100,7 +100,7 @@ export class TuiTextareaComponent
 
     @HostBinding('class._label-outside')
     protected get labelOutside(): boolean {
-        return this.options.appearance === 'table' || this.controller.labelOutside;
+        return this.options.appearance() === 'table' || this.controller.labelOutside;
     }
 
     @HostBinding('attr.data-size')
@@ -110,7 +110,7 @@ export class TuiTextareaComponent
 
     @HostBinding('style.--border-start.rem')
     protected get borderStart(): number {
-        return this.iconLeftContent ? TUI_ICON_PADDINGS[this.size] : 0;
+        return this.iconLeftContent ? TUI_ICON_START_PADDINGS[this.size] : 0;
     }
 
     @HostBinding('style.--border-end.rem')
@@ -143,7 +143,9 @@ export class TuiTextareaComponent
     }
 
     protected get appearance(): string {
-        return this.options.appearance === 'table' ? 'table' : this.controller.appearance;
+        return this.options.appearance() === 'table'
+            ? 'table'
+            : this.controller.appearance;
     }
 
     protected get hasCleaner(): boolean {
@@ -161,7 +163,7 @@ export class TuiTextareaComponent
     protected get iconLeftContent(): PolymorpheusContent<
         TuiContext<TuiSizeL | TuiSizeS>
     > {
-        return this.controller.iconLeft;
+        return this.controller.iconStart;
     }
 
     protected get iconContent(): PolymorpheusContent<TuiContext<TuiSizeL | TuiSizeS>> {

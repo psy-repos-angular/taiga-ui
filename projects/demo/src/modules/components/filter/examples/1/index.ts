@@ -4,11 +4,11 @@ import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {changeDetection} from '@demo/emulate/change-detection';
 import {encapsulation} from '@demo/emulate/encapsulation';
 import type {TuiBooleanHandler} from '@taiga-ui/cdk';
-import {TuiFilterComponent} from '@taiga-ui/kit';
+import {TuiFilter} from '@taiga-ui/kit';
 
 @Component({
     standalone: true,
-    imports: [ReactiveFormsModule, TuiFilterComponent, JsonPipe],
+    imports: [ReactiveFormsModule, TuiFilter, JsonPipe],
     templateUrl: './index.html',
     styleUrls: ['./index.less'],
     encapsulation,
@@ -30,5 +30,5 @@ export default class Example {
         'Building materials',
     ];
 
-    protected disabledItemHandler: TuiBooleanHandler<string> = item => item.length < 7;
+    protected disabledItemHandler: TuiBooleanHandler<string> = (item) => item.length < 7;
 }

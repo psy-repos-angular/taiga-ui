@@ -4,8 +4,8 @@ import {changeDetection} from '@demo/emulate/change-detection';
 import {TuiDemo} from '@demo/utils';
 import type {TuiBooleanHandler, TuiHandler} from '@taiga-ui/cdk';
 import {TUI_FALSE_HANDLER} from '@taiga-ui/cdk';
-import type {TuiSizeL, TuiSizeXS} from '@taiga-ui/core';
-import {TuiFilterComponent} from '@taiga-ui/kit';
+import type {TuiSizeL, TuiSizeS} from '@taiga-ui/core';
+import {TuiFilter} from '@taiga-ui/kit';
 
 class ItemWithBadge {
     constructor(
@@ -24,7 +24,7 @@ class ItemWithBadge {
 
 @Component({
     standalone: true,
-    imports: [TuiDemo, TuiFilterComponent, ReactiveFormsModule],
+    imports: [TuiDemo, TuiFilter, ReactiveFormsModule],
     templateUrl: './index.html',
     changeDetection,
 })
@@ -42,8 +42,8 @@ export default class Page {
     ];
 
     protected badgeHandlerVariants: ReadonlyArray<TuiHandler<unknown, number>> = [
-        item => Number(item),
-        item => String(item).length,
+        (item) => Number(item),
+        (item) => String(item).length,
     ];
 
     protected badgeHandler = this.badgeHandlerVariants[0];
@@ -52,8 +52,8 @@ export default class Page {
         TuiBooleanHandler<ItemWithBadge | string>
     > = [
         TUI_FALSE_HANDLER,
-        item => item === 'Roman Sedov',
-        item => (Number(item.valueOf()) || 0) >= 30,
+        (item) => item === 'Roman Sedov',
+        (item) => (Number(item.valueOf()) || 0) >= 30,
     ];
 
     protected disabledItemHandler = this.disabledItemHandlerVariants[0];
@@ -62,12 +62,7 @@ export default class Page {
 
     protected control = new FormControl(this.initialItems);
 
-    protected readonly sizeVariants: ReadonlyArray<TuiSizeL | TuiSizeXS> = [
-        'xs',
-        's',
-        'm',
-        'l',
-    ];
+    protected readonly sizeVariants: ReadonlyArray<TuiSizeL | TuiSizeS> = ['s', 'm', 'l'];
 
     protected size = this.sizeVariants[2];
 }

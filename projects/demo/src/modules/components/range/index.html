@@ -28,18 +28,20 @@
             [content]="3 | tuiExample"
         >
             <tui-notification class="tui-space_bottom-8">
-                <p class="tui-space_top-0">
-                    Use mixin
-                    <code>tui-slider-ticks-labels</code>
-                    to arrange ticks' labels (it places them strictly below ticks).
-                </p>
-                <p>
-                    The mixin accepts only a single argument – size of the slider (
-                    <code>m</code>
-                    or
-                    <code>s</code>
-                    ).
-                </p>
+                <div>
+                    <p class="tui-space_top-0">
+                        Use mixin
+                        <code>tui-slider-ticks-labels</code>
+                        to arrange ticks' labels (it places them strictly below ticks).
+                    </p>
+                    <div>
+                        The mixin accepts only a single argument – size of the slider (
+                        <code>m</code>
+                        or
+                        <code>s</code>
+                        ).
+                    </div>
+                </div>
             </tui-notification>
         </tui-doc-example>
 
@@ -57,6 +59,8 @@
                 <tui-range
                     [formControl]="control"
                     [keySteps]="keySteps"
+                    [limit]="limit"
+                    [margin]="margin"
                     [max]="max"
                     [min]="min"
                     [segments]="segments"
@@ -158,6 +162,35 @@
                 <p>
                     The default is
                     <code>null</code>
+                    .
+                </p>
+            </ng-template>
+            <ng-template
+                documentationPropertyMode="input"
+                documentationPropertyName="limit"
+                documentationPropertyType="number"
+                [(documentationPropertyValue)]="limit"
+            >
+                Limiting the maximum distance between two thumbs.
+
+                <p>
+                    The default is
+                    <code>Infinity</code>
+                    .
+                </p>
+            </ng-template>
+
+            <ng-template
+                documentationPropertyMode="input"
+                documentationPropertyName="margin"
+                documentationPropertyType="number"
+                [(documentationPropertyValue)]="margin"
+            >
+                Limiting the minimum distance between two thumbs.
+
+                <p>
+                    The default is
+                    <code>0</code>
                     .
                 </p>
             </ng-template>

@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import type {SafeValue} from '@angular/platform-browser';
 import {DomSanitizer} from '@angular/platform-browser';
-import {WINDOW} from '@ng-web-apis/common';
+import {WA_WINDOW} from '@ng-web-apis/common';
 import type {TuiContext} from '@taiga-ui/cdk/types';
 import {tuiPure} from '@taiga-ui/cdk/utils/miscellaneous';
 import {TuiButton} from '@taiga-ui/core/components/button';
@@ -22,7 +22,7 @@ import {
 } from '@taiga-ui/core/directives/appearance';
 import {TUI_COMMON_ICONS} from '@taiga-ui/core/tokens';
 import type {TuiSizeL} from '@taiga-ui/core/types';
-import type {TuiLanguage} from '@taiga-ui/i18n/interfaces';
+import type {TuiLanguage} from '@taiga-ui/i18n/types';
 import {TUI_DIGITAL_INFORMATION_UNITS, TUI_FILE_TEXTS} from '@taiga-ui/kit/tokens';
 import type {PolymorpheusContent} from '@taiga-ui/polymorpheus';
 import {PolymorpheusOutlet, PolymorpheusTemplate} from '@taiga-ui/polymorpheus';
@@ -53,7 +53,7 @@ export class TuiFile {
     private readonly sanitizer = inject(DomSanitizer);
     private readonly options = inject(TUI_FILE_OPTIONS);
     private readonly units$ = inject(TUI_DIGITAL_INFORMATION_UNITS);
-    private readonly win = inject(WINDOW) as Window & {File: typeof File};
+    private readonly win = inject(WA_WINDOW) as Window & {File: typeof File};
 
     protected readonly icons = inject(TUI_COMMON_ICONS);
     protected readonly fileTexts$ = inject(TUI_FILE_TEXTS);
@@ -131,7 +131,7 @@ export class TuiFile {
         fileTexts$: Observable<Record<keyof TuiLanguage['fileTexts'], string>>,
     ): Observable<PolymorpheusContent> {
         return state === 'error' && !file.content
-            ? fileTexts$.pipe(map(texts => texts.loadingError))
+            ? fileTexts$.pipe(map((texts) => texts.loadingError))
             : of(this.file.content || '');
     }
 
@@ -140,7 +140,7 @@ export class TuiFile {
         file: TuiFileLike,
         units$: Observable<[string, string, string]>,
     ): Observable<string | null> {
-        return units$.pipe(map(units => this.options.formatSize(units, file.size)));
+        return units$.pipe(map((units) => this.options.formatSize(units, file.size)));
     }
 
     @tuiPure

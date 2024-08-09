@@ -18,6 +18,7 @@
     border: 1px solid var(--tui-border-normal);
     // Create new viewport for fixed positioning
     filter: opacity(1);
+
     .safari-only({
         transform: translate3d(0, 0, 0);
     });
@@ -35,7 +36,7 @@
             left: 0;
         }
 
-        &:after {
+        &::after {
             .transition(opacity);
 
             content: '';
@@ -66,11 +67,18 @@
     padding: 0 1rem;
 }
 
+:host-context(table[data-size='s']) {
+    height: var(--tui-height-s);
+    font: var(--tui-font-text-s);
+    font-weight: bold;
+    padding: 0 0.5rem;
+}
+
 :host-context(thead[tuiThead]) {
     position: sticky;
 }
 
-:host-context(table._stuck)._sticky:after {
+:host-context(table._stuck)._sticky::after {
     opacity: 1;
 }
 
@@ -78,7 +86,7 @@
     box-shadow: 0 0.3125rem rgba(237, 237, 237, 0.7);
 }
 
-:host-context([tuiTheme='dark'])._sticky:after {
+:host-context([tuiTheme='dark'])._sticky::after {
     background: rgba(60, 60, 60, 0.9);
 }
 
@@ -118,7 +126,7 @@
     }
 
     &:focus-visible {
-        background: var(--tui-service-selected-text);
+        background: var(--tui-service-selection-background);
     }
 
     &:hover {

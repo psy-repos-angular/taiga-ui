@@ -3,10 +3,8 @@ import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {changeDetection} from '@demo/emulate/change-detection';
 import {encapsulation} from '@demo/emulate/encapsulation';
-import {tuiPure} from '@taiga-ui/cdk';
 import {TuiButton} from '@taiga-ui/core';
-import {TuiFilterComponent} from '@taiga-ui/kit';
-import type {Observable} from 'rxjs';
+import {TuiFilter} from '@taiga-ui/kit';
 import {BehaviorSubject, map} from 'rxjs';
 
 const Department = {
@@ -26,7 +24,7 @@ const Department = {
 
 @Component({
     standalone: true,
-    imports: [TuiButton, AsyncPipe, TuiFilterComponent, FormsModule],
+    imports: [TuiButton, AsyncPipe, TuiFilter, FormsModule],
     templateUrl: './index.html',
     styleUrls: ['./index.less'],
     encapsulation,
@@ -34,24 +32,15 @@ const Department = {
 })
 export default class Example {
     protected readonly items = Object.values(Department);
-
     protected readonly filters$ = new BehaviorSubject<readonly string[]>([]);
 
-    @tuiPure
-    protected get model$(): Observable<readonly string[]> {
-        return this.filters$.pipe(
-            map(value => (value.length === this.items.length ? [] : value)),
-        );
-    }
+    protected readonly checked$ = this.filters$.pipe(
+        map(({length}) => (length === this.items.length ? 'checked' : '')),
+    );
 
-    @tuiPure
-    protected get buttonAppearance$(): Observable<string> {
-        return this.filters$.pipe(
-            map(value =>
-                value.length === this.items.length ? 'whiteblock-active' : 'whiteblock',
-            ),
-        );
-    }
+    protected readonly model$ = this.filters$.pipe(
+        map((value) => (value.length === this.items.length ? [] : value)),
+    );
 
     protected onModelChange(model: readonly string[]): void {
         this.filters$.next(model);

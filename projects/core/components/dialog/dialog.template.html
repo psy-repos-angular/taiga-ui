@@ -30,6 +30,8 @@
     </section>
 </div>
 <div class="t-filler"></div>
+
+<!-- Close button is insensitive to `context.closeable === Observable<false>` by design -->
 <div
     *ngIf="context.closeable"
     class="t-wrapper"
@@ -41,7 +43,7 @@
         type="button"
         class="t-close"
         [appearance]="fullscreen ? 'secondary' : ''"
-        [iconLeft]="icons.close"
+        [iconStart]="icons.close"
         [style.border-radius.%]="100"
         (click)="close$.next()"
         (mousedown.prevent.silent)="(0)"

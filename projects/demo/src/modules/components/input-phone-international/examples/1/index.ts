@@ -4,14 +4,14 @@ import {changeDetection} from '@demo/emulate/change-detection';
 import {encapsulation} from '@demo/emulate/encapsulation';
 import type {TuiCountryIsoCode} from '@taiga-ui/i18n';
 import {
-    TuiInputPhoneInternationalComponent,
+    TuiInputPhoneInternational,
     tuiInputPhoneInternationalOptionsProvider,
 } from '@taiga-ui/kit';
 import {defer} from 'rxjs';
 
 @Component({
     standalone: true,
-    imports: [TuiInputPhoneInternationalComponent, FormsModule],
+    imports: [TuiInputPhoneInternational, FormsModule],
     templateUrl: './index.html',
     encapsulation,
     changeDetection,
@@ -22,7 +22,7 @@ import {defer} from 'rxjs';
          */
         tuiInputPhoneInternationalOptionsProvider({
             metadata: defer(async () =>
-                import('libphonenumber-js/max/metadata').then(m => m.default),
+                import('libphonenumber-js/max/metadata').then((m) => m.default),
             ),
         }),
         /**

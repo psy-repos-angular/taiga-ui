@@ -16,23 +16,24 @@ import {createAngularJson} from '../../../utils/create-angular-json';
 const collectionPath = join(__dirname, '../../../migration.json');
 
 const COMPONENT_BEFORE = `
-import { TuiLinkModule } from "@taiga-ui/core";
+import { TuiLinkModule, TuiNotificationModule } from "@taiga-ui/core";
 
 @Component({
     standalone: true,
     templateUrl: './test.template.html',
-    imports: [TuiLinkModule]
+    imports: [TuiLinkModule, TuiNotificationModule]
 })
 export class Test {
 }`;
 
 const COMPONENT_AFTER = `import { TuiChevron } from "@taiga-ui/kit";
-import { TuiLink } from "@taiga-ui/core";
+
+import { TuiNotification, TuiLink } from "@taiga-ui/core";
 
 @Component({
     standalone: true,
     templateUrl: './test.template.html',
-    imports: [TuiLink, TuiChevron]
+    imports: [TuiLink, TuiNotification, TuiChevron]
 })
 export class Test {
 }`;
@@ -52,18 +53,32 @@ const TEMPLATE_BEFORE = `
 >
     Link with icon left
 </a>
+<a
+    [icon]="icon"
+    iconAlign="left"
+    tuiLink
+>
+    Link with icon left
+</a>
 `;
 
 const TEMPLATE_AFTER = `
 <a
-    iconRight="tuiIconSettings"
+    iconEnd="tuiIconSettings"
     tuiLink
     [tuiChevron]="true"
 >
     Link with icon right
 </a>
 <a
-    iconLeft="tuiIconSettings"
+    iconStart="tuiIconSettings"
+    ${''}
+    tuiLink
+>
+    Link with icon left
+</a>
+<a
+    [iconStart]="icon"
     ${''}
     tuiLink
 >

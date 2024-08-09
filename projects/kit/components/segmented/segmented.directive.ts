@@ -15,11 +15,10 @@ import {tuiQueryListChanges} from '@taiga-ui/cdk/observables';
 import {tuiInjectElement} from '@taiga-ui/cdk/utils/dom';
 import {EMPTY, switchMap} from 'rxjs';
 
-import {TuiSegmentedComponent} from './segmented.component';
+import {TuiSegmented} from './segmented.component';
 
 @Directive({
     standalone: true,
-    selector: 'tui-segmented:not(tui-segmented)',
 })
 export class TuiSegmentedDirective implements AfterContentChecked, AfterContentInit {
     @ContentChildren(NgControl, {descendants: true})
@@ -32,7 +31,7 @@ export class TuiSegmentedDirective implements AfterContentChecked, AfterContentI
     private readonly elements: QueryList<ElementRef<HTMLElement>> = EMPTY_QUERY;
 
     private readonly destroyRef = inject(DestroyRef);
-    private readonly component = inject(TuiSegmentedComponent);
+    private readonly component = inject(TuiSegmented);
     private readonly el = tuiInjectElement();
 
     public ngAfterContentInit(): void {
@@ -62,10 +61,10 @@ export class TuiSegmentedDirective implements AfterContentChecked, AfterContentI
     }
 
     private get linkIndex(): number {
-        return this.links.toArray().findIndex(link => link.isActive);
+        return this.links.toArray().findIndex((link) => link.isActive);
     }
 
     private getIndex(element: Element | null): number {
-        return Array.from(this.el.children).findIndex(tab => tab.contains(element));
+        return Array.from(this.el.children).findIndex((tab) => tab.contains(element));
     }
 }

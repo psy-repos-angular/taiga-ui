@@ -23,13 +23,24 @@ export function addHTMLCommentTags({
     const template = getTemplateFromTemplateResource(resource, fileSystem);
     const templateOffset = getTemplateOffset(resource);
 
-    data.forEach(({comment, tag, withAttrs}) => {
+    data.forEach(({comment, tag, withAttrs, pattern}) => {
+        if (pattern && template.match(pattern)) {
+            recorder.insertRight(
+                templateOffset && templateOffset + 1,
+                `<!-- ${TODO_MARK} ${comment} -->\n`,
+            );
+        }
+
+        if (!tag || !withAttrs) {
+            return;
+        }
+
         const elementStartOffsets = [
             ...findElementsWithAttributeOnTag(template, withAttrs, [tag]),
             ...(withAttrs.length
                 ? findElementsWithAttributeOnTag(
                       template,
-                      withAttrs.map(attr => `[${attr}]`),
+                      withAttrs.map((attr) => `[${attr}]`),
                       [tag],
                   )
                 : []),
@@ -38,7 +49,7 @@ export function addHTMLCommentTags({
                 (sourceCodeLocation?.startOffset || 0) + templateOffset,
         );
 
-        elementStartOffsets.forEach(offset => {
+        elementStartOffsets.forEach((offset) => {
             recorder.insertLeft(offset, `<!-- ${TODO_MARK} ${comment} -->\n`);
         });
     });

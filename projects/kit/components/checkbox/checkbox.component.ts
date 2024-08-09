@@ -5,6 +5,7 @@ import {
     DestroyRef,
     inject,
     Input,
+    ViewEncapsulation,
 } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NgControl, NgModel} from '@angular/forms';
@@ -22,15 +23,16 @@ import {TUI_CHECKBOX_OPTIONS} from './checkbox.options';
     standalone: true,
     selector: 'input[type="checkbox"][tuiCheckbox]',
     template: '',
-    styleUrls: ['./checkbox.style.less'],
+    styles: ['@import "@taiga-ui/kit/styles/components/checkbox.less";'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     hostDirectives: [TuiWithAppearance, TuiNativeValidator],
     host: {
         '[disabled]': '!control || control.disabled',
         '[attr.data-size]': 'size',
         '[class._readonly]': '!control',
-        '[style.--t-checked]': 'getIcon("checked")',
-        '[style.--t-indeterminate]': 'getIcon("indeterminate")',
+        '[style.--t-checked-icon]': 'getIcon("checked")',
+        '[style.--t-indeterminate-icon]': 'getIcon("indeterminate")',
     },
 })
 export class TuiCheckbox implements OnInit, DoCheck {
@@ -55,9 +57,12 @@ export class TuiCheckbox implements OnInit, DoCheck {
 
         tuiControlValue(this.control)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
+            .subscribe((value) => {
                 // https://github.com/angular/angular/issues/14988
-                const fix = this.control instanceof NgModel ? this.control.model : value;
+                const fix =
+                    this.control instanceof NgModel && value === null
+                        ? this.control.model
+                        : value;
 
                 this.el.indeterminate = fix === null;
             });

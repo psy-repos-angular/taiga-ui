@@ -1,0 +1,212 @@
+<header tuiNavigationHeader>
+    <button
+        appearance="secondary"
+        iconStart="@tui.layout-grid"
+        tuiIconButton
+    >
+        Menu
+    </button>
+    <span tuiNavigationLogo>
+        <tui-icon icon="@tui.home" />
+        <span tuiFade>A very very long product name</span>
+        <tui-badge>Test</tui-badge>
+    </span>
+    <button
+        appearance="secondary"
+        tuiButton
+        tuiChevron
+        tuiDropdownOpen
+        [tuiDropdown]="products"
+    >
+        <span tuiFade>A very very long project</span>
+        <ng-template #products>
+            <tui-data-list size="s">
+                <button tuiOption>
+                    A very very long project
+                    <tui-icon
+                        icon="@tui.check"
+                        [style.font-size.em]="1"
+                        [style.margin-left.rem]="0.5"
+                    />
+                </button>
+                <button tuiOption>Something else</button>
+            </tui-data-list>
+        </ng-template>
+    </button>
+    <hr />
+    <button
+        appearance="secondary"
+        iconStart="@tui.plus"
+        tuiButton
+    >
+        Create
+    </button>
+    <button
+        iconStart="@tui.bell"
+        tuiIconButton
+    >
+        Notifications
+        <tui-badge-notification />
+    </button>
+    <button
+        iconStart="@tui.ellipsis"
+        tuiIconButton
+    >
+        More
+    </button>
+    <tui-avatar src="AI" />
+</header>
+<div [style.display]="'flex'">
+    <aside
+        [style.height.rem]="27"
+        [tuiNavigationAside]="expanded"
+    >
+        <header>
+            <button
+                iconStart="@tui.home"
+                tuiAsideItem
+            >
+                <span tuiFade>A very very long product name</span>
+            </button>
+        </header>
+        <button
+            iconStart="@tui.search"
+            tuiAsideItem
+        >
+            Search
+        </button>
+        <a
+            iconStart="@tui.users"
+            tuiAsideItem
+            [routerLink]="routes.Navigation"
+        >
+            Groups
+        </a>
+        <tui-aside-group>
+            <button
+                iconStart="@tui.settings"
+                tuiAsideItem
+                tuiChevron
+            >
+                Settings
+                <ng-template>
+                    <button tuiAsideItem>Account</button>
+                    <button tuiAsideItem>Notifications</button>
+                    <button tuiAsideItem>Privacy</button>
+                </ng-template>
+            </button>
+        </tui-aside-group>
+        <button
+            iconStart="@tui.heart"
+            tuiAsideItem
+        >
+            <span tuiFade>By default ellipsis is used but you can use fade too</span>
+        </button>
+        <button
+            iconEnd="@tui.chevron-right"
+            iconStart="@tui.ellipsis"
+            tuiAsideItem
+            tuiDropdownHover
+            tuiDropdownOpen
+            [tuiDropdown]="more"
+        >
+            More
+            <ng-template
+                #more
+                let-close
+            >
+                <tui-data-list tuiDataListDropdownManager>
+                    <button
+                        iconStart="@tui.pencil"
+                        tuiAsideItem
+                        tuiOption
+                    >
+                        Write
+                    </button>
+                    <button
+                        iconStart="@tui.pie-chart"
+                        tuiAsideItem
+                        tuiOption
+                        [tuiDropdown]="submenu"
+                    >
+                        Categories
+                        <ng-template #submenu>
+                            <tui-data-list>
+                                <button
+                                    tuiAsideItem
+                                    (click)="close()"
+                                >
+                                    Fiction (will close menu)
+                                </button>
+                                <button tuiAsideItem>Non-Fiction</button>
+                                <button tuiAsideItem>Children</button>
+                            </tui-data-list>
+                        </ng-template>
+                    </button>
+                </tui-data-list>
+            </ng-template>
+        </button>
+        <hr />
+        <button
+            iconStart="@tui.plus"
+            tuiAsideItem
+        >
+            Add
+        </button>
+        <footer>
+            <button
+                iconStart="@tui.star"
+                tuiAsideItem
+            >
+                Favorites
+            </button>
+            <button
+                tuiAsideItem
+                [iconStart]="expanded ? '@tui.chevron-left' : '@tui.chevron-right'"
+                (click)="expanded = !expanded"
+            >
+                {{ expanded ? 'Collapse' : 'Expand' }}
+            </button>
+        </footer>
+    </aside>
+    <main tuiNavigationMain>
+        <nav
+            tuiNavigationNav
+            [style.position]="'sticky'"
+        >
+            <a routerLink=".">
+                <tui-icon icon="@tui.chevron-left" />
+                Back
+            </a>
+            /
+            <span tuiNavigationLogo>
+                <span tuiFade>Groups</span>
+                <tui-badge iconStart="@tui.lock">Status</tui-badge>
+            </span>
+            <hr />
+            <tui-tabs tuiFade>
+                <button tuiTab>Default view</button>
+                <button tuiTab>Details</button>
+                <button tuiTab>Followers</button>
+            </tui-tabs>
+            <button
+                appearance="secondary"
+                tuiButton
+            >
+                Secondary
+            </button>
+            <button tuiButton>Primary</button>
+        </nav>
+        <div
+            *tuiRepeatTimes="let index of 10"
+            tuiCardLarge
+            tuiHeader
+            tuiSurface="elevated"
+        >
+            <h2 tuiTitle>
+                Some random content
+                <span tuiSubtitle>A subtitle</span>
+            </h2>
+        </div>
+    </main>
+</div>

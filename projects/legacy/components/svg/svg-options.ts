@@ -39,7 +39,7 @@ export const TUI_SVG_DEFAULT_OPTIONS: TuiSvgOptions = {
     path: tuiIconsPathFactory(TUI_DEFAULT_ICONS_PLACE),
     srcProcessor: identity,
     contentProcessor: tuiSvgLinearGradientProcessor,
-    deprecated: src => {
+    deprecated: (src) => {
         const oldIcon = src.replace('Large', '').replace('Outline', '');
         const newIcon = TUI_DEPRECATED_ICONS[oldIcon];
 
@@ -86,7 +86,7 @@ export const tuiSvgOptionsProvider: (
     options: Partial<Omit<TuiSvgOptions, 'path'>> & {
         path?: TuiSvgOptions['path'] | string;
     },
-) => FactoryProvider = options => ({
+) => FactoryProvider = (options) => ({
     provide: TUI_SVG_OPTIONS,
     deps: [[new SkipSelf(), new Optional(), TUI_SVG_OPTIONS]],
     useFactory: (fallback: TuiSvgOptions | null): TuiSvgOptions => ({
@@ -96,7 +96,7 @@ export const tuiSvgOptionsProvider: (
             TUI_SVG_DEFAULT_OPTIONS.iconsPlace,
         path: tuiIsString(options.path)
             ? tuiIconsPathFactory(options.path)
-            : options.path ?? fallback?.path ?? TUI_SVG_DEFAULT_OPTIONS.path,
+            : (options.path ?? fallback?.path ?? TUI_SVG_DEFAULT_OPTIONS.path),
         deprecated:
             options.deprecated ??
             fallback?.deprecated ??

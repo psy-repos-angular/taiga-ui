@@ -1,6 +1,6 @@
 <tui-doc-page
     header="InputCopy"
-    package="KIT"
+    package="LEGACY"
     type="components"
 >
     <ng-template pageTab>
@@ -13,11 +13,13 @@
             [content]="1 | tuiExample: 'html,ts'"
         >
             <tui-notification class="tui-space_bottom-4">
-                If you need to set some attributes or listen to events on native
-                <code>input</code>
-                , you can put it inside with
-                <code>Textfield</code>
-                directive as shown below
+                <div>
+                    If you need to set some attributes or listen to events on native
+                    <code>input</code>
+                    , you can put it inside with
+                    <code>Textfield</code>
+                    directive as shown below
+                </div>
             </tui-notification>
         </tui-doc-example>
     </ng-template>
@@ -38,7 +40,7 @@
                 [tuiTextfieldCleaner]="cleaner"
                 [tuiTextfieldCustomContent]="customContent"
                 [tuiTextfieldFiller]="filler"
-                [tuiTextfieldIconLeft]="iconLeft"
+                [tuiTextfieldIconLeft]="iconStart"
                 [tuiTextfieldLabelOutside]="labelOutside"
                 [tuiTextfieldSize]="size"
             >

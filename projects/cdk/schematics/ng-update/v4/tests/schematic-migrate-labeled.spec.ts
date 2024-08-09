@@ -35,28 +35,26 @@ import { TuiLabel } from "@taiga-ui/core";
 export class Test {
 }`;
 
-const TEMPLATE_BEFORE = `
-
-<tui-checkbox-labeled [(ngModel)]="value">
+const TEMPLATE_BEFORE = `<tui-checkbox-labeled [(ngModel)]="value">
   Label
 </tui-checkbox-labeled>
 
-<tui-radio-labeled size="l" [formControl]="control" [item]="value" [identityMatcher]="matcher">
+<tui-checkbox-labeled [(ngModel)]="value">Content</tui-checkbox-labeled>
+
+<tui-radio-labeled size="l" [formControl]="control" [item]="value" [identityMatcher]="matcher" [pseudoDisabled]="disabled">
   Label
 </tui-radio-labeled>
 `;
 
-const TEMPLATE_AFTER = `
-<label tuiLabel>
-<input tuiCheckbox type="checkbox" [(ngModel)]="value">
+const TEMPLATE_AFTER = `<label tuiLabel><input tuiCheckbox type="checkbox" [(ngModel)]="value">
   Label
 </label>
-
 <label tuiLabel>
-<input tuiRadio type="radio" size="m" [formControl]="control" [value]="value" [identityMatcher]="matcher">
+<input tuiCheckbox type="checkbox" [(ngModel)]="value">Content</label>
+<label tuiLabel>
+<input tuiRadio type="radio" size="m" [formControl]="control" [value]="value" [identityMatcher]="matcher" [tuiAppearanceState]="disabled ? 'disabled' : null">
   Label
 </label>
-
 `;
 
 describe('ng-update', () => {

@@ -8,8 +8,8 @@ import {
     ViewEncapsulation,
 } from '@angular/core';
 import {
-    MUTATION_OBSERVER_INIT,
     MutationObserverService,
+    WA_MUTATION_OBSERVER_INIT,
 } from '@ng-web-apis/mutation-observer';
 import {ResizeObserverService} from '@ng-web-apis/resize-observer';
 import {tuiInjectElement} from '@taiga-ui/cdk/utils/dom';
@@ -26,7 +26,7 @@ import {BehaviorSubject, debounce, filter, map, Subject, timer} from 'rxjs';
         ResizeObserverService,
         MutationObserverService,
         {
-            provide: MUTATION_OBSERVER_INIT,
+            provide: WA_MUTATION_OBSERVER_INIT,
             useValue: {childList: true},
         },
     ],
@@ -42,7 +42,7 @@ export class TuiTilesComponent {
     public readonly orderChange = this.el$.pipe(
         debounce(() => timer(this.debounce)),
         filter(this.filter.bind(this)),
-        map(element => this.reorder(element)),
+        map((element) => this.reorder(element)),
     );
 
     @HostBinding('class._dragged')

@@ -10,7 +10,7 @@ import {NG_EVENT_PLUGINS} from '@taiga-ui/event-plugins';
 import type {TuiCountryIsoCode, TuiLanguage} from '@taiga-ui/i18n';
 import {TUI_ENGLISH_LANGUAGE, TUI_LANGUAGE, TUI_RUSSIAN_LANGUAGE} from '@taiga-ui/i18n';
 import {
-    TuiInputPhoneInternationalComponent,
+    TuiInputPhoneInternational,
     tuiInputPhoneInternationalOptionsProvider,
 } from '@taiga-ui/kit';
 import {TuiNativeInputPO} from '@taiga-ui/testing';
@@ -36,8 +36,8 @@ describe('InputPhoneInternational', () => {
         ],
     })
     class Test {
-        @ViewChild(TuiInputPhoneInternationalComponent, {static: true})
-        public component!: TuiInputPhoneInternationalComponent;
+        @ViewChild(TuiInputPhoneInternational, {static: true})
+        public component!: TuiInputPhoneInternational;
 
         public control = new FormControl('+79110330102');
 
@@ -50,7 +50,7 @@ describe('InputPhoneInternational', () => {
 
     let fixture: ComponentFixture<Test>;
     let testComponent: Test;
-    let component: TuiInputPhoneInternationalComponent;
+    let component: TuiInputPhoneInternational;
     let inputPO: TuiNativeInputPO;
 
     const initializeTestModule = (language: TuiLanguage = TUI_ENGLISH_LANGUAGE): void => {
@@ -58,7 +58,7 @@ describe('InputPhoneInternational', () => {
             TestBed.configureTestingModule({
                 imports: [
                     TuiRoot,
-                    TuiInputPhoneInternationalComponent,
+                    TuiInputPhoneInternational,
                     ReactiveFormsModule,
                     NoopAnimationsModule,
                 ],
@@ -125,7 +125,7 @@ describe('InputPhoneInternational', () => {
         });
 
         describe('should set KZ country code on paste event', () => {
-            ['+7 777 777-7777', '+7 7272 588300'].forEach(phone => {
+            ['+7 777 777-7777', '+7 7272 588300'].forEach((phone) => {
                 it(`${phone}`, async () => {
                     await paste(phone);
 
@@ -169,7 +169,7 @@ describe('InputPhoneInternational', () => {
             let result: unknown;
             const phoneNumber = '+380123456789';
 
-            testComponent.control.valueChanges.subscribe(value => {
+            testComponent.control.valueChanges.subscribe((value) => {
                 result = value;
             });
 
@@ -221,7 +221,7 @@ describe('InputPhoneInternational', () => {
         const countryNameContainers =
             fixture.debugElement.queryAll(By.css('.t-country-item-name')) || [];
 
-        return countryNameContainers.map(container =>
+        return countryNameContainers.map((container) =>
             container.nativeElement.textContent?.trim(),
         );
     }

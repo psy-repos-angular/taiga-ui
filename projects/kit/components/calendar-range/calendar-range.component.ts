@@ -1,5 +1,5 @@
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
-import type {OnChanges} from '@angular/core';
+import type {OnChanges, OnInit} from '@angular/core';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -42,13 +42,12 @@ import type {TuiDayRangePeriod} from './day-range-period';
     styleUrls: ['./calendar-range.style.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TuiCalendarRange implements OnChanges {
+export class TuiCalendarRange implements OnInit, OnChanges {
     protected readonly otherDateText$ = inject(TUI_OTHER_DATE_TEXT);
     protected readonly icons = inject(TUI_COMMON_ICONS);
     protected readonly cdr = inject(ChangeDetectorRef);
     protected previousValue: TuiDayRange | null = null;
     protected hoveredItem: TuiDay | null = null;
-    protected selectedActivePeriod: TuiDayRangePeriod | null = null;
     protected readonly capsMapper = TUI_DAY_CAPS_MAPPER;
 
     @Input()
@@ -81,16 +80,24 @@ export class TuiCalendarRange implements OnChanges {
     @Output()
     public readonly valueChange = new EventEmitter<TuiDayRange | null>();
 
+    public selectedActivePeriod: TuiDayRangePeriod | null = null;
+
     constructor() {
         inject<Observable<TuiDayRange | null>>(TUI_CALENDAR_DATE_STREAM, {optional: true})
             ?.pipe(tuiWatch(this.cdr), takeUntilDestroyed())
-            .subscribe(value => {
+            .subscribe((value) => {
                 this.value = value;
             });
     }
 
     public ngOnChanges(): void {
         this.defaultViewedMonth = this.value?.from || this.defaultViewedMonth;
+    }
+
+    public ngOnInit(): void {
+        if (!this.value) {
+            this.updateDefaultViewedMonth();
+        }
     }
 
     protected get calculatedDisabledItemHandler(): TuiBooleanHandler<TuiDay> {
@@ -127,7 +134,7 @@ export class TuiCalendarRange implements OnChanges {
         ReadonlyArray<TuiDayRangePeriod | string>
     > = (items, min, max, minLength, otherDateText) => [
         ...items.filter(
-            item =>
+            (item) =>
                 (minLength === null ||
                     item.range.from.append(minLength).daySameOrBefore(item.range.to)) &&
                 (min === null || item.range.to.daySameOrAfter(min)) &&
@@ -175,7 +182,7 @@ export class TuiCalendarRange implements OnChanges {
     private get activePeriod(): TuiDayRangePeriod | null {
         return (
             this.selectedActivePeriod ??
-            (this.items.find(item =>
+            (this.items.find((item) =>
                 tuiNullableSame<TuiDayRange>(
                     this.value,
                     item.range,
@@ -194,7 +201,7 @@ export class TuiCalendarRange implements OnChanges {
         value: TuiDayRange | null,
         minLength: TuiDayLike | null,
     ): TuiBooleanHandler<TuiDay> {
-        return item => {
+        return (item) => {
             if (!value?.isSingleDay || !minLength) {
                 return disabledItemHandler(item);
             }
@@ -209,5 +216,15 @@ export class TuiCalendarRange implements OnChanges {
 
             return inDisabledRange || disabledItemHandler(item);
         };
+    }
+
+    private updateDefaultViewedMonth(): void {
+        if (this.max && this.defaultViewedMonth.monthSameOrAfter(this.max)) {
+            this.defaultViewedMonth = this.max.append({month: -1});
+        }
+
+        if (this.min && this.defaultViewedMonth.monthSameOrBefore(this.min)) {
+            this.defaultViewedMonth = this.min;
+        }
     }
 }

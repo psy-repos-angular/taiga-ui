@@ -6,6 +6,7 @@ import {TUI_DOC_PAGES, TUI_DOC_TITLE} from '@taiga-ui/addon-doc/tokens';
 import type {TuiDocRoutePages} from '@taiga-ui/addon-doc/types';
 import {tuiIsPresent} from '@taiga-ui/cdk/utils/miscellaneous';
 import {tuiLinkOptionsProvider} from '@taiga-ui/core/components/link';
+import {tuiScrollbarOptionsProvider} from '@taiga-ui/core/components/scrollbar';
 import type {Observable} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs';
 
@@ -47,7 +48,7 @@ export const NAVIGATION_PROVIDERS: Provider[] = [
             titlePrefix: string,
         ): Observable<string> =>
             router.events.pipe(
-                filter(event => event instanceof NavigationEnd),
+                filter((event) => event instanceof NavigationEnd),
                 map(() => activatedRoute.firstChild),
                 filter(tuiIsPresent),
                 mergeMap(({data}) => data),
@@ -67,9 +68,12 @@ export const NAVIGATION_PROVIDERS: Provider[] = [
             const labels = labelsProviderFactory(pages);
 
             return [
-                ...labels.map(label => pages.filter(({section}) => section === label)),
-                pages.filter(page => !page.section),
+                ...labels.map((label) => pages.filter(({section}) => section === label)),
+                pages.filter((page) => !page.section),
             ];
         },
     },
+    tuiScrollbarOptionsProvider({
+        mode: 'hover',
+    }),
 ];

@@ -1,4 +1,4 @@
-@import '../../taiga-ui-local.less';
+@import '@taiga-ui/core/styles/taiga-ui-local.less';
 
 [tuiAppearance][data-appearance='textfield'] {
     .transition(~'box-shadow, background, outline-color');
@@ -34,6 +34,12 @@
     &[data-mode='readonly'] {
         box-shadow: none;
         outline-color: var(--tui-border-normal) !important;
+    }
+
+    &:-webkit-autofill {
+        -webkit-text-fill-color: var(--tui-text-primary) !important;
+        border-color: var(--tui-service-autofill-background);
+        box-shadow: 0 0 0 100rem var(--tui-service-autofill-background) inset !important;
     }
 }
 

@@ -11,7 +11,7 @@ import {
     TuiIcon,
     TuiLink,
 } from '@taiga-ui/core';
-import {TuiActionBar, TuiFilterComponent} from '@taiga-ui/kit';
+import {TuiActionBar, TuiFilter} from '@taiga-ui/kit';
 import {map} from 'rxjs';
 
 @Component({
@@ -23,7 +23,7 @@ import {map} from 'rxjs';
         NgIf,
         TuiLink,
         ReactiveFormsModule,
-        TuiFilterComponent,
+        TuiFilter,
         TuiIcon,
     ],
     templateUrl: './index.html',
@@ -37,7 +37,7 @@ export default class Example {
     protected expanded = false;
 
     protected readonly isMobile = toSignal(
-        inject(TuiBreakpointService).pipe(map(size => size === 'mobile')),
+        inject(TuiBreakpointService).pipe(map((size) => size === 'mobile')),
     );
 
     protected get value(): string[] {

@@ -5,12 +5,13 @@ import {infoLog} from '../projects/cdk/schematics/utils/colored-log';
 import {execute} from './shared/execute';
 import {IGNORABLE_TAIGA_PACKAGES} from './shared/ignorable-packages';
 import {overwriteVersion} from './shared/overwrite-version';
+import {parseVersion} from './shared/parse-version';
 import {syncVersions} from './shared/sync-versions';
 
 (function main(): void {
     const type = 'canary';
     const commit = execute('git rev-parse HEAD', {}).slice(0, 7);
-    const [major, minor, patch] = version.split(/[.-]/) as [string, string, string];
+    const {major, minor, patch} = parseVersion(version);
 
     // construct new version from base version x.y.z to become x.y.z-{type}.{shortSha}
     const newVersion = `${major}.${minor}.${patch}-${type}.${commit}`;
@@ -22,6 +23,6 @@ import {syncVersions} from './shared/sync-versions';
     overwriteVersion(resolve('./projects/cdk/constants/version.ts'), newVersion);
 
     execute(
-        `npx nx run-many --target publish --all --customTag=${type} --customVersion=${newVersion}`,
+        `npx nx run-many --target publish --all --customTag=${type} --customVersion=${newVersion} --nxBail`,
     );
 })();

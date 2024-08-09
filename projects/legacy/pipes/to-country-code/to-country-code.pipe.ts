@@ -1,7 +1,7 @@
 import type {PipeTransform} from '@angular/core';
 import {inject, Pipe} from '@angular/core';
 import {CHAR_PLUS} from '@taiga-ui/cdk/constants';
-import type {TuiCountryIsoCode} from '@taiga-ui/i18n/enums';
+import type {TuiCountryIsoCode} from '@taiga-ui/i18n/types';
 import {TUI_COUNTRIES_MASKS} from '@taiga-ui/legacy/tokens';
 import {
     tuiGetMaxAllowedPhoneLength,
@@ -49,7 +49,7 @@ export class TuiToCountryCodePipe implements PipeTransform {
         value: string,
         countries: readonly TuiCountryIsoCode[],
     ): TuiCountryIsoCode | undefined {
-        return countries.find(countryIsoCode => {
+        return countries.find((countryIsoCode) => {
             const ruCodeTest =
                 countryIsoCode === 'RU' &&
                 /^[78]/.test(value) &&
