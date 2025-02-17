@@ -1,4 +1,3 @@
-/* eslint-disable i18n/no-russian-character */
 import type {TuiDocRoutePage, TuiDocRoutePageBase} from '@taiga-ui/addon-doc';
 
 import {DemoRoute} from './demo-routes';
@@ -836,6 +835,12 @@ export const pages: DocRoutePages = [
         title: 'Sheet',
         keywords: 'mobile, dialog, popup, map, details, шторка',
         route: DemoRoute.Sheet,
+    },
+    {
+        section: 'Components',
+        title: 'BottomSheet',
+        keywords: 'mobile, dialog, popup, map, details, шторка, sheet',
+        route: DemoRoute.BottomSheet,
     },
     {
         section: 'Components',
