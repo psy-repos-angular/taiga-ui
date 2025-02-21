@@ -10,6 +10,7 @@ import {toSignal} from '@angular/core/rxjs-interop';
 import {EVENT_MANAGER_PLUGINS} from '@angular/platform-browser';
 import {tuiAsPortal, TuiPortals} from '@taiga-ui/cdk/classes';
 import {TUI_VERSION} from '@taiga-ui/cdk/constants';
+import {TuiFontSize} from '@taiga-ui/cdk/directives/font-size';
 import {TuiPlatform} from '@taiga-ui/cdk/directives/platform';
 import {TuiVisualViewport} from '@taiga-ui/cdk/directives/visual-viewport';
 import {tuiWatch} from '@taiga-ui/cdk/observables';
@@ -39,14 +40,14 @@ import {map} from 'rxjs';
     // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
     changeDetection: ChangeDetectionStrategy.Default,
     viewProviders: [tuiAsPortal(TuiPopupService)],
-    hostDirectives: [TuiPlatform, TuiVisualViewport],
+    hostDirectives: [TuiPlatform, TuiVisualViewport, TuiFontSize],
     host: {
         'data-tui-version': TUI_VERSION,
         '[style.--tui-duration.ms]': 'duration',
         '[style.--tui-scroll-behavior]': 'reducedMotion ? "auto" : "smooth"',
         '[class._mobile]': 'isMobileRes()',
         // Required for the :active state to work in Safari. https://stackoverflow.com/a/33681490
-        '(touchstart.passive.silent)': '0',
+        '(touchstart.passive.zoneless)': '0',
     },
 })
 export class TuiRoot extends TuiPortals {
@@ -63,7 +64,7 @@ export class TuiRoot extends TuiPortals {
 
     protected readonly nativeScrollbar = inject(TUI_SCROLLBAR_OPTIONS).mode === 'native';
 
-    protected readonly scrollbars = !(this.nativeScrollbar || inject(TUI_IS_MOBILE));
+    protected readonly scrollbars = !this.nativeScrollbar && !inject(TUI_IS_MOBILE);
 
     constructor() {
         super();

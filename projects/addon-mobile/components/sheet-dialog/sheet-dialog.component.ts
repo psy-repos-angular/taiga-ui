@@ -1,11 +1,18 @@
 import {NgForOf, NgIf} from '@angular/common';
-import type {AfterViewInit, ElementRef, QueryList} from '@angular/core';
-import {ChangeDetectionStrategy, Component, inject, ViewChildren} from '@angular/core';
+import type {AfterViewInit, QueryList} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    ViewChildren,
+} from '@angular/core';
+import {tuiProvide} from '@taiga-ui/cdk';
 import {EMPTY_QUERY} from '@taiga-ui/cdk/constants';
 import type {TuiPopover} from '@taiga-ui/cdk/services';
 import {tuiInjectElement} from '@taiga-ui/cdk/utils/dom';
 import {tuiSlideInTop} from '@taiga-ui/core/animations';
-import {TUI_ANIMATIONS_SPEED} from '@taiga-ui/core/tokens';
+import {TUI_ANIMATIONS_SPEED, TUI_SCROLL_REF} from '@taiga-ui/core/tokens';
 import {tuiGetDuration} from '@taiga-ui/core/utils/miscellaneous';
 import {shouldCall} from '@taiga-ui/event-plugins';
 import {injectContext, PolymorpheusOutlet} from '@taiga-ui/polymorpheus';
@@ -25,14 +32,15 @@ function isCloseable(this: TuiSheetDialogComponent<unknown>): boolean {
     styleUrls: ['./sheet-dialog.style.less'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [tuiSlideInTop],
+    providers: [tuiProvide(TUI_SCROLL_REF, ElementRef)],
     host: {
         '[@tuiSlideInTop]': 'slideInTop',
         '[style.--tui-offset.px]': 'context.offset',
         '[class._closeable]': 'context.closeable === true',
-        '(document:touchstart.passive.silent)': 'onPointerChange(1)',
-        '(document:touchend.silent)': 'onPointerChange(-1)',
-        '(document:touchcancel.silent)': 'onPointerChange(-1)',
-        '(scroll.silent)': 'onPointerChange(0)',
+        '(document:touchstart.passive.zoneless)': 'onPointerChange(1)',
+        '(document:touchend.zoneless)': 'onPointerChange(-1)',
+        '(document:touchcancel.zoneless)': 'onPointerChange(-1)',
+        '(scroll.zoneless)': 'onPointerChange(0)',
         '(click.self)': 'close()',
     },
 })

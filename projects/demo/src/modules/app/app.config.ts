@@ -1,4 +1,9 @@
-import {isPlatformBrowser, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import {
+    isPlatformBrowser,
+    LocationStrategy,
+    PathLocationStrategy,
+    ViewportScroller,
+} from '@angular/common';
 import {HttpClient, provideHttpClient} from '@angular/common/http';
 import type {ApplicationConfig} from '@angular/core';
 import {inject, PLATFORM_ID, provideZoneChangeDetection} from '@angular/core';
@@ -36,6 +41,7 @@ import {
     TUI_DROPDOWN_HOVER_OPTIONS,
     TUI_HINT_DEFAULT_OPTIONS,
     TUI_HINT_OPTIONS,
+    tuiEnableFontScaling,
     tuiNotificationOptionsProvider,
 } from '@taiga-ui/core';
 import {NG_EVENT_PLUGINS} from '@taiga-ui/event-plugins';
@@ -52,6 +58,7 @@ import {pages} from './pages';
 import {SEARCH_CONFIG} from './search/env';
 import {TuiStackblitzService} from './stackblitz/stackblitz.service';
 import {exampleContentProcessor} from './utils';
+import {TuiViewportScroller} from './utils/viewport-scroller.service';
 
 export const config: ApplicationConfig = {
     providers: [
@@ -64,8 +71,13 @@ export const config: ApplicationConfig = {
             }),
         ),
         NG_EVENT_PLUGINS,
+        tuiEnableFontScaling(),
         tuiNotificationOptionsProvider({size: 'm'}),
         provideHttpClient(),
+        {
+            provide: ViewportScroller,
+            useClass: TuiViewportScroller,
+        },
         {
             provide: TUI_PLATFORM,
             useValue: 'web',

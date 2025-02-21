@@ -212,6 +212,10 @@ export class TuiInputDateRangeComponent
     }
 
     public override writeValue(value: TuiDayRange | null): void {
+        if (this.value === null && value === this.value) {
+            return;
+        }
+
         super.writeValue(value);
         this.nativeValue.set(this.value ? this.computedValue : '');
         this.selectedActivePeriod = this.findActivePeriodBy(this.value);
@@ -304,6 +308,7 @@ export class TuiInputDateRangeComponent
         return this.items.findIndex((item) => String(item) === this.nativeValue()) !== -1;
     }
 
+    // eslint-disable-next-line @typescript-eslint/max-params,max-params
     @tuiPure
     private calculateMask(
         dateFormat: TuiDateMode,

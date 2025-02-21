@@ -2,11 +2,11 @@
 
 .interactive(@ruleset) {
     // TODO remove after dropping Safari 13 support
-    &:matches(a, button, select, textarea, input, label) {
+    &:matches(a, button, select, textarea, input, label):not(:disabled) {
         @ruleset();
     }
 
-    &:is(a, button, select, textarea, input, label) {
+    &:is(a, button, select, textarea, input, label):not(:disabled) {
         @ruleset();
     }
 }
@@ -32,6 +32,7 @@
 }
 
 //.fullsize
+// @deprecated TODO remove in 5.0 in favor of inset: 0
 .fullsize(@position: absolute, @mode: height) {
     position: @position;
     top: 0;
@@ -53,7 +54,7 @@
     padding: 0;
     border: 0;
     background: none;
-    font-size: inherit;
+    font: inherit;
     line-height: inherit;
     text-decoration: none;
 }
@@ -70,7 +71,8 @@
     overflow: hidden;
     vertical-align: middle;
     max-inline-size: 100%;
-    gap: calc(var(--t-gap, var(--t-0, 0rem)) - 2 * var(--t-margin, 0rem));
+    // StackBlitz changes "0rem" to "0" breaking calc
+    gap: calc(var(--t-gap, ~'0rem') - 2 * var(--t-margin, 0rem));
 
     > img,
     > tui-svg,

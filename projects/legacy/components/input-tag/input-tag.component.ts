@@ -82,8 +82,8 @@ const TAG_VERTICAL_SPACE_REM = 0.125;
         '[class._icon-start]': 'iconStart',
         '[class._expandable]': 'expandable',
         '[class._label-outside]': 'labelOutside',
-        '(focusin.capture.silent)': 'onFocusInOut()',
-        '(focusout.capture.silent)': 'onFocusInOut()',
+        '(focusin.capture.zoneless)': 'onFocusInOut()',
+        '(focusout.capture.zoneless)': 'onFocusInOut()',
     },
 })
 export class TuiInputTagComponent
@@ -421,16 +421,17 @@ export class TuiInputTagComponent
         const array = value.split(this.separator);
         const tags = array
             .map((item) => this.clippedValue(item.trim()))
-            .filter((item, index, {length}) => item.length > 0 && index !== length - 1);
+            .filter((item) => item.length > 0);
         const validated = tags.filter((tag) => !this.disabledItemHandler(tag));
         const invalid = tags.filter((tag) => this.disabledItemHandler(tag));
 
         if (array.length > 1) {
             const search = invalid.length
                 ? invalid.join(tuiIsString(this.separator) ? this.separator : ',')
-                : (array[array.length - 1]?.trim() ?? '');
+                : '';
 
             this.updateSearch(this.clippedValue(search));
+
             this.value = this.filterValue([...this.value, ...validated]);
         } else {
             this.updateSearch(this.clippedValue(value));

@@ -9,7 +9,7 @@
 <div class="t-content">
     <h2
         class="t-heading"
-        [class.t-heading_closable]="context.closeable"
+        [class.t-heading_closable]="context.closeable && !header"
         [id]="context.id"
         [textContent]="context.label"
     ></h2>
@@ -44,7 +44,7 @@
     [size]="isMobile() ? 'xs' : 's'"
     [style.border-radius.%]="100"
     (click)="close$.next()"
-    (mousedown.prevent.silent)="(0)"
+    (mousedown.prevent.zoneless)="(0)"
 >
     {{ closeWord$ | async }}
 </button>
